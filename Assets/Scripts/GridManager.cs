@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scripts {
-    class GridManager : MonoBehaviour {
+    public class GridManager : MonoBehaviour {
         /// <summary>
         /// The width of each plane
         /// </summary>
@@ -16,12 +16,17 @@ namespace Scripts {
         public int planeHeight = 10;
         
         /// <summary>
+        /// The object used to parent the game object
+        /// </summary>
+        public Transform gridPlane;
+        
+        /// <summary>
         /// The planes on the players hand
         /// Indexed by [z][y][x]
         /// Each tile is stored in rows, each row is stored in a plane 
         /// </summary>
         private List<GameObject[][]> _grid;
-        
+
         /// <summary>
         /// Adds a block to the grid
         /// </summary>
@@ -32,7 +37,7 @@ namespace Scripts {
         /// <param name="x">The X position, in terms of the grid, where the origin block collided</param>
         /// <param name="y">The Y position, in terms of the grid, where the origin block collided</param>
         /// <param name="z">The Z position, in terms of the grid, where the origin block collided</param>
-        public IEnumerator<GameObject> AddBlockToGrid(GameObject[] blocks, int x, int y, int z) {
+        public IEnumerator<GameObject> AddBlocksToGrid(GameObject[] blocks, int x, int y, int z) {
             foreach (var block in blocks) {
                 var blockPosition = block.transform.position;
                 var blockZ = (int) Math.Floor(blockPosition.z) + z;
@@ -47,6 +52,8 @@ namespace Scripts {
                     yield return block;
                     continue;
                 }
+                
+                block.transform.SetParent(gridPlane);
 
                 _grid[blockZ][y + (int) blockPosition.y][x + (int) blockPosition.x] = block;
             }
