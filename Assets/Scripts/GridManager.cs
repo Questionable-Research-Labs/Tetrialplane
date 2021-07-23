@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Scripts {
@@ -79,14 +80,12 @@ namespace Scripts {
                 var foundEmptyTile = false;
 
                 // Loop through all the rows
-                foreach (var row in plane) {
+                foreach (var row in plane)
+                {
                     // Loop through all the tiles
-                    foreach (var tile in row) {
-                        // Check to see if the space is empty, if true, break from the loop
-                        if (tile == null) {
-                            foundEmptyTile = true;
-                            break;
-                        }
+                    if (row.Any(tile => tile == null))
+                    {
+                        foundEmptyTile = true;
                     }
 
                     // If there is an empty tile in the current plane, break out of the loop
@@ -112,17 +111,17 @@ namespace Scripts {
             _grid = tempGrid;
 
             // Loop through all the planes
-            for (int z = 0; z < _grid.Count; z++) {
+            for (var z = 0; z < _grid.Count; z++) {
                 // Get the current plane
                 var plane = _grid[z];
 
                 // Iterate through the rows
-                for (int y = 0; y < plane.Length; y++) {
+                for (var y = 0; y < plane.Length; y++) {
                     // Get the current row
                     var row = plane[y];
 
                     // Iterate through all the tiles
-                    for (int x = 0; x < row.Length; x++) {
+                    for (var x = 0; x < row.Length; x++) {
                         // Get the current tile
                         var tile = row[x];
                         // Set the position of the object
@@ -142,7 +141,7 @@ namespace Scripts {
         private void AddPlane() {
             var columns = new GameObject[planeHeight][];
 
-            for (int i = 0; i < planeHeight; i++) {
+            for (var i = 0; i < planeHeight; i++) {
                 columns[i] = new GameObject[planeWidth];
             }
         }
