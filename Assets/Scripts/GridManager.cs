@@ -109,6 +109,13 @@ namespace Scripts {
             return missedBlocks;
         }
 
+        public void AddBlockToGrid(GameObject block,int x, int y, int z) {
+            var tform = _grid[z][y][x].transform;
+            block.transform.SetParent(tform);
+            block.transform.localPosition = Vector3.zero;
+            block.transform.rotation = Quaternion.identity;
+        }
+
         /**
          * <summary>
          * Finds all of the empty spaces then returns them in a tuple, with the first element is the index of the element in the grid,

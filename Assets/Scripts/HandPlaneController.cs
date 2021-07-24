@@ -112,6 +112,7 @@ public class HandPlaneController : MonoBehaviour {
                                 minDist = new Tuple<(int, int, int), float>(emptyCell.Item1, dist);
                             }
                         }
+                        snappedBlocks.Add((blockTransform.gameObject,minDist.Item1));
                     }
                     
                     // Check that block placement is valid
@@ -125,6 +126,7 @@ public class HandPlaneController : MonoBehaviour {
                                 break;
                             case BlockPositionValidity.SpaceTaken:
                                 allBlocksVaild = false;
+                                
                                 break;
                             case BlockPositionValidity.OutOfBounds:
                                 // To implement Splitting, for now, don't snap
@@ -136,7 +138,7 @@ public class HandPlaneController : MonoBehaviour {
                     if (oneBlockConnected && allBlocksVaild) {
                         Debug.Log("Time to Insert into grid");
                         foreach ((GameObject innerBlock,(int x, int y, int z)) in snappedBlocks) {
-                            gridManager.AddBlocksToGrid(innerBlock,x,y,z);
+                            gridManager.AddBlockToGrid(innerBlock,x,y,z);
                         }
                     }
                     else {
