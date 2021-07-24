@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5658460610396119232}
   - component: {fileID: 4677498862405628059}
   - component: {fileID: 7583055508985116230}
-  - component: {fileID: 5324117492705512679}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Block
@@ -83,19 +82,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5324117492705512679
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1094930525715248921}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2041322840241128492
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +93,6 @@ GameObject:
   - component: {fileID: 3313991431562160373}
   - component: {fileID: 7881083995600097294}
   - component: {fileID: 6959497262390584266}
-  - component: {fileID: 5374226762631868278}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Block
@@ -179,19 +164,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5374226762631868278
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2041322840241128492}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4571656937345101287
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +174,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3577669109239297176}
   - component: {fileID: 2527616307139902366}
-  - component: {fileID: 799629438191388141}
+  - component: {fileID: 5108016247034401344}
   m_Layer: 0
   m_Name: S
   m_TagString: Piece
@@ -244,20 +216,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &799629438191388141
-MeshCollider:
+--- !u!114 &5108016247034401344
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4571656937345101287}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52405c44c2d6429db9d91282ed2fab00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4874039647926169343
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +239,6 @@ GameObject:
   - component: {fileID: 5452059243793740972}
   - component: {fileID: 6475221878381657313}
   - component: {fileID: 8869860525839731314}
-  - component: {fileID: 2771434830136397534}
   m_Layer: 0
   m_Name: Cube (3)
   m_TagString: Block
@@ -341,19 +310,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2771434830136397534
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4874039647926169343}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9209923163028500902
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,7 +321,6 @@ GameObject:
   - component: {fileID: 2298060893069361109}
   - component: {fileID: 6905907009409123333}
   - component: {fileID: 8942292023319486072}
-  - component: {fileID: 3418689350431699472}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Block
@@ -437,16 +392,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3418689350431699472
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9209923163028500902}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
