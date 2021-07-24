@@ -202,7 +202,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3759181972165412382}
   - component: {fileID: 7126016791829216016}
-  - component: {fileID: 2428561297591965484}
+  - component: {fileID: 5663810087700799547}
   m_Layer: 0
   m_Name: T
   m_TagString: Piece
@@ -244,8 +244,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &2428561297591965484
-BoxCollider:
+--- !u!64 &5663810087700799547
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -254,9 +254,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 2, z: 1}
-  m_Center: {x: 0, y: -0.5, z: 0}
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1 &5055627251982228601
 GameObject:
   m_ObjectHideFlags: 0

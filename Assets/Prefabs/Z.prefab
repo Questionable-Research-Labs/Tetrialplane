@@ -394,7 +394,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7966495961552500067}
   - component: {fileID: 7574715740384689537}
-  - component: {fileID: 829217985786798671}
+  - component: {fileID: 4009197811640946280}
   m_Layer: 0
   m_Name: Z
   m_TagString: Piece
@@ -436,8 +436,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &829217985786798671
-BoxCollider:
+--- !u!64 &4009197811640946280
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -446,6 +446,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 2, z: 1}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}

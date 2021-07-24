@@ -81,7 +81,7 @@ public class FlyingController : MonoBehaviour {
         //     Random.Range(minVelocity.y, maxVelocity.y),
         //     Random.Range(minVelocity.z, maxVelocity.z)
         // );
-        Vector3 velocity = new Vector3(0, -5, 0);
+        Vector3 velocity = new Vector3(0, -1, 0);
 
         rigidBody.velocity = velocity;
     }

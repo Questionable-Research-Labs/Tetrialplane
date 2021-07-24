@@ -273,7 +273,7 @@ namespace Scripts {
                         // Get the current tile
                         var tile = row[x];
                         // Set the position of the object
-                        tile.transform.localPosition = ConvertFromGridIDToLocalSpace(x,y,z);
+                        tile.transform.localPosition = ConvertFromGridIDToLocalSpace(x,y,z+1);
                     }
                 }
             }

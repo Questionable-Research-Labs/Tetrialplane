@@ -120,8 +120,11 @@ public class HandPlaneController : MonoBehaviour {
                     // adjust so it is above the snapped block
                     snappingPosition.Item3++;
 
-                    gridManager.AddBlocksToGrid(objs, snappingPosition.Item1, snappingPosition.Item2,
+                    List<GameObject> blocksMissed = gridManager.AddBlocksToGrid(objs, snappingPosition.Item1, snappingPosition.Item2,
                         snappingPosition.Item3);
+                    if (blocksMissed.Count == 0) {
+                        Destroy(piece);
+                    }
 
                     // Time to snap the blocks to the new positions
                     /*List<(GameObject, (int, int, int))> snappedBlocks = new List<(GameObject, (int, int, int))>();
