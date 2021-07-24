@@ -7,8 +7,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-public class FlyingController : MonoBehaviour
-{
+public class FlyingController : MonoBehaviour {
     // An array of available prefabs for pieces
     public GameObject[] pieces;
 
@@ -25,29 +24,24 @@ public class FlyingController : MonoBehaviour
     public Vector3 pieceScale;
 
     // Start is called before the first frame update
-    private void Start()
-    {
+    private void Start() {
         var i = 0;
-        while (i < 1)
-        {
+        while (i < 1) {
             CreatePieceObject();
             i++;
         }
     }
 
     // Update is called once per frame
-    private void Update()
-    {
+    private void Update() {
     }
 
-    private void OnTriggerExit(Collider other)
-    {
+    private void OnTriggerExit(Collider other) {
         if (!other.CompareTag("Piece")) return;
         GameObjectLeave(other.gameObject);
     }
 
-    private void GameObjectLeave(Object root)
-    {
+    private void GameObjectLeave(Object root) {
         Destroy(root);
         if (root == null) return;
         CreatePieceObject();
@@ -55,8 +49,7 @@ public class FlyingController : MonoBehaviour
         // TODO: LOOSE POINT OUT OF REGION
     }
 
-    private void CreatePieceObject()
-    {
+    private void CreatePieceObject() {
         int random = Random.Range(0, pieces.Length - 1);
         GameObject originalObject = pieces[random];
 
@@ -72,7 +65,7 @@ public class FlyingController : MonoBehaviour
         */
         Vector3 position = new Vector3(0, 3, 0);
         // Quaternion rotation = Random.rotation;
-        Quaternion rotation = new Quaternion(0,0,0,0);
+        Quaternion rotation = new Quaternion(0, 0, 0, 0);
 
 
         GameObject newObject = Instantiate(originalObject, position, rotation);
