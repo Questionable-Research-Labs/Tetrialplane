@@ -39,6 +39,8 @@ namespace Scripts {
          */
         private List<GameObject[][]> _grid;
 
+        private GameObject[][] _peaks;
+
         /** <summary>
          * Adds a block to the grid
          * </summary>
@@ -50,34 +52,69 @@ namespace Scripts {
          * <param name="y">The Y position, in terms of the grid, where the origin block collided</param>
          * <param name="z">The Z position, in terms of the grid, where the origin block collided</param>
          */
-        public IEnumerator<GameObject> AddBlocksToGrid(GameObject[] blocks, int x, int y, int z) {
-            var blocksMissed = 0;
+        public List<GameObject> AddBlocksToGrid(GameObject[] blocks, int x, int y, int z) {
+            // The number of blocks that did not land on the grid
+            var blocksMissedCount = 0;
+
+            // The missed blockes
+            var missedBlocks = new List<GameObject>();
+
+            // Loop through all the blocks being added to the grid
             foreach (var block in blocks) {
+                // Get the position of the block
                 var blockPosition = block.transform.position;
+
+                // Get the z position of the block
                 var blockZ = (int) Math.Floor(blockPosition.z) + z;
 
+                // Add any necessary planes to account for new blocks 
                 if (blockZ >= _grid.Count) {
-                    for (var i = 0; i < blockZ + 1 - _grid.Count; i++) {
+                    for (var i = 0; i < blockZ - _grid.Count; i++) {
                         AddPlane();
                     }
                 }
 
+                // Check to make sure that the block has landed in the grid
                 if (x + 1 > PlaneWidth || y + 1 > PlaneHeight) {
-                    yield return block;
-                    blocksMissed++;
+                    // Return the block
+                    missedBlocks.Add(block);
+                    // Increment the number of missed blocks
+                    blocksMissedCount++;
                     continue;
                 }
 
-                block.transform.SetParent(gridPlane);
-
+                // Get the transform of the gameobject in the grid to use as transform parent
                 var parentTransform = _grid[blockZ][y + (int) blockPosition.y][x + (int) blockPosition.x].transform;
 
+                // Parent the block
                 block.transform.SetParent(parentTransform);
+
+                // Set it's local position to 0
+                block.transform.localPosition = Vector3.zero;
             }
 
-            if (blocksMissed != 0) {
-                scoreManager.PieceMissed(blocksMissed);
+            // Deduct the points from the player
+            if (blocksMissedCount != 0) {
+                scoreManager.PieceMissed(blocksMissedCount);
             }
+
+            // Update the grid
+            StartCoroutine(UpdateGrid());
+
+            // Return the missed blocks
+            return missedBlocks;
+        }
+
+        /**
+         * <summary>
+         * Finds all of the empty spaces then returns them in a tuple, with the first element is the index of the element in the grid,
+         * and the second is the location in world space
+         * </summary>
+         */
+        public List<(Vector3 localPosition, Vector3 position)> GetPeaks() {
+            return (from row in _peaks 
+                from tile in row 
+                select (tile.transform.localPosition, tile.transform.position)).ToList();
         }
 
         /** <summary>
@@ -85,7 +122,7 @@ namespace Scripts {
          * </summary>
          * <returns></returns>
          */
-        public IEnumerator UpdateGrid() {
+        private IEnumerator UpdateGrid() {
             // Create a temporary grid to store the updated grid
             var tempGrid = new List<GameObject[][]>();
 
@@ -152,41 +189,28 @@ namespace Scripts {
                 }
             }
 
+            RecalculatePeaks();
+
             yield return null;
         }
-
         /**
          * <summary>
-         * Finds all of the empty spaces then returns them in a tuple, with the first element is the index of the element in the grid,
-         * and the second is the location in world space
+         * Find all the peaks for any given index
          * </summary>
          */
-        public List<Tuple<Vector3, Vector3>> GetEmptySpaces() {
-            var emptySpaces = new List<Tuple<Vector3, Vector3>>();
-            // Loop through all the planes
-            for (var z = 0; z < _grid.Count; z++) {
-                // Get the current plane
-                var plane = _grid[z];
-
-                // Iterate through the rows
-                for (var y = 0; y < plane.Length; y++) {
-                    // Get the current row
-                    var row = plane[y];
-
-                    // Iterate through all the tiles
-                    for (var x = 0; x < row.Length; x++) {
-                        // Get the current tile
-                        var tile = row[x];
-                        // Check to see if the tile is empty
-                        if (tile.transform.childCount == 0) {
-                            emptySpaces.Add(new Tuple<Vector3, Vector3>(new Vector3(z, y, x), tile.transform.position));
+        private void RecalculatePeaks() {
+            for (int y = 0; y < PlaneHeight; y++) {
+                for (int x = 0; x < PlaneWidth; x++) {
+                    for (int z = _grid.Count -1 ; z >= 0; z--) {
+                        if (_grid[z][y][x].transform.childCount > 0) {
+                            _peaks[y][x] = _grid[z][y][x];
+                            break;
                         }
                     }
                 }
             }
-
-            return emptySpaces;
         }
+
 
         /** <summary>
          * Creates an empty plane
@@ -211,7 +235,16 @@ namespace Scripts {
             _grid.Add(columns);
         }
 
+        private void Awake() {
+            _peaks = new GameObject[PlaneHeight][];
+
+            for (var y = 0; y < PlaneHeight; y++) {
+                _peaks[y] = new GameObject[PlaneWidth];
+            }
+        }
+
         private void Start() {
+            // Add an initial plane
             AddPlane();
         }
     }
