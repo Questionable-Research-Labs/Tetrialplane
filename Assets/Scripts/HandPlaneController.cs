@@ -8,6 +8,7 @@ public class HandPlaneController : MonoBehaviour {
     public Transform transform;
     public GridManager gridManager;
     public float planeHeight;
+    private List<GameObject> enabledPieces;
 
     // Start is called before the first frame update
     private void Start() {
@@ -41,9 +42,27 @@ public class HandPlaneController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        foreach (GameObject piece in enabledPieces) {
+            var input = new List<(Vector3,Vector3)>();
+            
+            // Find distance from piece to every empty cell
+            List<(Vector3, float)> cellMagnitudes = new List<(Vector3, float)>();
+            foreach ((Vector3 cellGridPos,Vector3 cellWorldPos) in input) {
+                cellMagnitudes.Add((cellGridPos,Vector3.Distance(piece.transform.position,cellWorldPos)));
+            }
+        }
     }
 
     private static GameObject GetRoot(GameObject gameObject) {
         return gameObject.transform.root.gameObject;
     }
+
+    public void AddPieceToActive(GameObject piece) {
+        enabledPieces.Add(piece);
+    }
+
+    public void RemovePieceFromActive(GameObject piece) {
+        enabledPieces.Remove(piece);
+    }
+
 }
