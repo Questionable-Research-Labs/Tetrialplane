@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2651849948098139517}
   - component: {fileID: 1517647131400141011}
   - component: {fileID: 4568535778241082745}
+  - component: {fileID: 5467968181855383264}
+  - component: {fileID: 5921835210387134717}
   m_Layer: 0
   m_Name: Quad
   m_TagString: Untagged
@@ -25,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3075588236543509455}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.5001, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6873050026022274347}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &1517647131400141011
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -60,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: a47f9d2f206bbec4c94a8ad224c5307a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82,6 +84,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5467968181855383264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3075588236543509455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 722f0d5ce412df6588eee8208875e656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreManagerName: XRScoreCanvas
+  gridPlane: {fileID: 2651849948098139517}
+--- !u!114 &5921835210387134717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3075588236543509455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aba65908a4d58664099ce0d6b0a7af5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transform: {fileID: 2651849948098139517}
+  gridManager: {fileID: 5467968181855383264}
+  planeHeight: 0
+  snapDistThreshold: 0.6
 --- !u!1 &6021594528632150390
 GameObject:
   m_ObjectHideFlags: 0

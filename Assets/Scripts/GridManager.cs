@@ -13,7 +13,9 @@ namespace Scripts {
          * The score manager
          * </summary>
          */
-        public ScoreManager scoreManager;
+
+        public String scoreManagerName;
+        private ScoreManager scoreManager;
 
         /** <summary>
          * The width of each plane
@@ -358,6 +360,8 @@ namespace Scripts {
         }
 
         private void Awake() {
+            scoreManager = GameObject.Find(scoreManagerName).GetComponent<ScoreManager>();
+            
             _peaks = new(int, GameObject)[PlaneHeight][];
             _scalerFromGridToLocal = new Vector3(transform.localScale.x / PlaneWidth,transform.localScale.z / PlaneHeight,0);
             _scalerFromGridToLocal.z = (_scalerFromGridToLocal.x + _scalerFromGridToLocal.y) / 2;
