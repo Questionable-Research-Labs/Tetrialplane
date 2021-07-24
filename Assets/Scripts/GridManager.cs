@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 namespace Scripts {
@@ -37,7 +38,7 @@ namespace Scripts {
          * Each tile is stored in rows, each row is stored in a plane 
          * </summary>
          */
-        private List<GameObject[][]> _grid;
+        private List<GameObject[][]> _grid = new List<GameObject[][]>();
 
         private GameObject[][] _peaks;
 
@@ -112,9 +113,27 @@ namespace Scripts {
          * </summary>
          */
         public List<(Vector3 localPosition, Vector3 position)> GetPeaks() {
-            return (from row in _peaks 
-                from tile in row 
-                select (tile.transform.localPosition, tile.transform.position)).ToList();
+            var peakPos = new List<(Vector3, Vector3)>();
+
+            if (_grid.Count == 1) {
+                foreach( var row in _grid[0]) {
+                    foreach (var tile in row) {
+                        Debug.Log($"Tile Transform {tile.transform.localPosition}");
+                        Vector3 virtualLayerLocalPosition = tile.transform.localPosition - Vector3.down;
+                        Vector3 virtualLayerWorldPosition = tile.transform.TransformPoint(virtualLayerLocalPosition);
+                        peakPos.Add((virtualLayerLocalPosition, virtualLayerWorldPosition));
+                    }
+                }
+            }
+            else {
+                foreach( var row in _peaks) {
+                    foreach (var tile in row) {
+                        peakPos.Add((tile.transform.localPosition, tile.transform.position));
+                    }
+                }    
+            }
+
+            return peakPos;
         }
 
         /** <summary>
@@ -168,6 +187,12 @@ namespace Scripts {
 
             _grid = tempGrid;
 
+            RecalculatePeaks();
+
+            yield return null;
+        }
+
+        private void MoveTiles() {
             // Loop through all the planes
             for (var z = 0; z < _grid.Count; z++) {
                 // Get the current plane
@@ -189,20 +214,22 @@ namespace Scripts {
                 }
             }
 
-            RecalculatePeaks();
-
-            yield return null;
         }
+
         /**
          * <summary>
          * Find all the peaks for any given index
          * </summary>
          */
         private void RecalculatePeaks() {
+            MoveTiles();
+            
             for (int y = 0; y < PlaneHeight; y++) {
                 for (int x = 0; x < PlaneWidth; x++) {
-                    for (int z = _grid.Count -1 ; z >= 0; z--) {
+
+                    for (int z = _grid.Count - 1; z >= 0; z--) {
                         if (_grid[z][y][x].transform.childCount > 0) {
+                            Debug.Log($"Find grid piece for ({x},{y})");
                             _peaks[y][x] = _grid[z][y][x];
                             break;
                         }
@@ -231,6 +258,8 @@ namespace Scripts {
 
                 columns[y] = row;
             }
+            
+            MoveTiles();
 
             _grid.Add(columns);
         }
@@ -241,6 +270,8 @@ namespace Scripts {
             for (var y = 0; y < PlaneHeight; y++) {
                 _peaks[y] = new GameObject[PlaneWidth];
             }
+            
+            RecalculatePeaks();
         }
 
         private void Start() {

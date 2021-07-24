@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Scripts;
 //begone thot
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class FlyingController : MonoBehaviour {
 
     // The scale to give each spawned piece
     public Vector3 pieceScale;
-
+    
     // Start is called before the first frame update
     private void Start() {
         var i = 0;
