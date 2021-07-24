@@ -1,14 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Scripts;
 //begone thot
 using Unity.VisualScripting;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
-public class FlyingController : MonoBehaviour
-{
+public class FlyingController : MonoBehaviour {
     // An array of available prefabs for pieces
     public GameObject[] pieces;
 
@@ -23,31 +23,29 @@ public class FlyingController : MonoBehaviour
 
     // The scale to give each spawned piece
     public Vector3 pieceScale;
-
+    
     // Start is called before the first frame update
-    private void Start()
-    {
-        var i = 0;
-        while (i < 1)
-        {
+    private void Start() {
+        StartCoroutine(SlowlyCreatePieceObjects());
+    }
+
+    private IEnumerator SlowlyCreatePieceObjects() {
+        while (true) {
             CreatePieceObject();
-            i++;
+            yield return new WaitForSeconds(3f);
         }
     }
 
     // Update is called once per frame
-    private void Update()
-    {
+    private void Update() {
     }
 
-    private void OnTriggerExit(Collider other)
-    {
+    private void OnTriggerExit(Collider other) {
         if (!other.CompareTag("Piece")) return;
         GameObjectLeave(other.gameObject);
     }
 
-    private void GameObjectLeave(Object root)
-    {
+    private void GameObjectLeave(Object root) {
         Destroy(root);
         if (root == null) return;
         CreatePieceObject();
@@ -55,14 +53,13 @@ public class FlyingController : MonoBehaviour
         // TODO: LOOSE POINT OUT OF REGION
     }
 
-    private void CreatePieceObject()
-    {
-        var random = Random.Range(0, pieces.Length - 1);
-        var originalObject = pieces[random];
+    private void CreatePieceObject() {
+        int random = Random.Range(0, pieces.Length - 1);
+        GameObject originalObject = pieces[random];
 
-        var bounds = gameArea.bounds;
-        var boundsMin = bounds.min;
-        var boundsMax = bounds.max;
+        Bounds bounds = gameArea.bounds;
+        Vector3 boundsMin = bounds.min;
+        Vector3 boundsMax = bounds.max;
 
         /*var position = new Vector3(
             Random.Range(boundsMin.x, boundsMax.x),
@@ -70,17 +67,21 @@ public class FlyingController : MonoBehaviour
             Random.Range(boundsMin.z, boundsMax.z)
         );
         */
-        var position = new Vector3(0, 3, 0);
+        Vector3 position = new Vector3(0, 3, 0);
+        // Quaternion rotation = Random.rotation;
+        Quaternion rotation = new Quaternion(0, 0, 0, 0);
 
-        var newObject = Instantiate(originalObject, position, Random.rotation);
+
+        GameObject newObject = Instantiate(originalObject, position, rotation);
         newObject.transform.localScale = pieceScale;
-        var rigidBody = newObject.GetComponentInChildren<Rigidbody>();
+        Rigidbody rigidBody = newObject.GetComponentInChildren<Rigidbody>();
 
-        var velocity = new Vector3(
-            Random.Range(minVelocity.x, maxVelocity.x),
-            Random.Range(minVelocity.y, maxVelocity.y),
-            Random.Range(minVelocity.z, maxVelocity.z)
-        );
+        // var Vector3 = new Vector3(
+        //     Random.Range(minVelocity.x, maxVelocity.x),
+        //     Random.Range(minVelocity.y, maxVelocity.y),
+        //     Random.Range(minVelocity.z, maxVelocity.z)
+        // );
+        Vector3 velocity = new Vector3(0, -1, 0);
 
         rigidBody.velocity = velocity;
     }
