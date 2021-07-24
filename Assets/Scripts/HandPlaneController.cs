@@ -50,7 +50,7 @@ public class HandPlaneController : MonoBehaviour {
     IEnumerator  ComputeSnapping() {
         foreach (GameObject piece in enabledPieces) {
 
-            List<(Vector3,Vector3)> peaks = gridManager.GetPeaks();
+            List<((int, int, int),Vector3)> peaks = gridManager.GetPeaks();
             foreach (var xPeak in peaks) {
             }
             // (blockTransform,chosenCell,dist)
@@ -58,12 +58,12 @@ public class HandPlaneController : MonoBehaviour {
             foreach (Transform blockTransform in piece.transform) {
                 // Find distance from piece to every Peak
                 List<(Vector3, float)> cellMagnitudes = new List<(Vector3, float)>();
-                foreach ((Vector3 cellGridPos,Vector3 cellWorldPos) in peaks) {
+                foreach (((int cellZ, int cellY, int cellX),Vector3 cellWorldPos) in peaks) {
                     Vector3 topOfPiece = piece.transform.position + piece.transform.TransformPoint(piece.transform.up*0.5f);
                     float dist = Vector3.Distance(topOfPiece, cellWorldPos);
-                    cellMagnitudes.Add((cellGridPos,Vector3.Distance(topOfPiece,cellWorldPos)));  
+                    cellMagnitudes.Add((new Vector3(cellX, cellY, cellZ),Vector3.Distance(piece.transform.position,cellWorldPos)));  
                     Debug.DrawRay(piece.transform.position, cellWorldPos-piece.transform.position, Color.green);
-                    // Debug.Log($"Piece: {piece.transform.position}, cell: {cellWorldPos}");
+                    Debug.Log($"Piece: {new Vector3(cellX, cellY, cellZ)}, cell: {cellWorldPos}");
                 }
                 // Order Cell peaks tops by distance magnitude
                 cellMagnitudes.Sort((x, y) => x.Item2.CompareTo(y.Item2));
@@ -85,9 +85,37 @@ public class HandPlaneController : MonoBehaviour {
                 // the far block
                 // (blockTransform,chosenCell,dist)
                 (Transform, Vector3, float) farBlock = bestBlocksInPiece[0];
-                
+
+                Vector3 rotationOfPiece =
+                    Vector3.RotateTowards(closeBlock.Item1.position, farBlock.Item1.position, 6.28319f, 0.0f);
+
+                bool closeEnoughToSnap = true;
+                foreach (float rotationAxis in new float[] {rotationOfPiece.x,rotationOfPiece.y,rotationOfPiece.z}) {
+                    double radianQuarterTurn = Math.PI / 2;
+                    double normalizedRotation = rotationAxis % radianQuarterTurn;
+                    if (normalizedRotation > radianQuarterTurn*0.25 && normalizedRotation < radianQuarterTurn*0.75) {
+                        closeEnoughToSnap = false;
+                    }
+                }
+
+                if (closeEnoughToSnap) {
+                    Debug.Log("SUCESSSSSSUS");
+                    // Check that block placement is valid
+                    bool oneBlockConnected = false;
+                    bool allBlocksVaild = true;
+                    
+                    foreach (Transform blockTransform in piece.transform) {
+                        
+                    }
+                }
+                else {
+                    Debug.Log("NOOOOOOOOO");
+                    break;
+                }
+
                 // Workout angle between close block and far block
-                Debug.Log($"Roatate yes{Vector3.RotateTowards(closeBlock.Item1.position,farBlock.Item1.position,6.28319f, 0.0f)}, Close {closeBlock}");
+                Debug.Log($"Rotation of piece {rotationOfPiece}, Close {closeBlock}");
+                
             }
             else {
                 Debug.Log($"FAIL YES ???? {bestBlocksInPiece[0].Item3.ToString()}, {snapDistThreshold.ToString()}");

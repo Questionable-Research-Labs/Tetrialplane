@@ -41,7 +41,7 @@ namespace Scripts {
          */
         private List<GameObject[][]> _grid = new List<GameObject[][]>();
 
-        private GameObject[][] _peaks;
+        private (int, GameObject)[][] _peaks;
 
         private Vector3 scalerFromGridToLocal;
 
@@ -115,23 +115,26 @@ namespace Scripts {
          * and the second is the location in world space
          * </summary>
          */
-        public List<(Vector3 localPosition, Vector3 position)> GetPeaks() {
-            var peakPos = new List<(Vector3, Vector3)>();
+        public List<((int, int, int) localPosition, Vector3 position)> GetPeaks() {
+            var peakPos = new List<((int,int,int), Vector3)>();
 
             if (_grid.Count == 1) {
-                foreach( var row in _grid[0]) {
-                    foreach (var tile in row) {
+                for(var y = 0; y < _grid[0].Length; y++) {
+                    var row = _grid[0][y];
+                    for (var x = 0; x < row.Length; x++) {
+                        var tile = row[x];
                         Vector3 virtualLayerLocalPosition = tile.transform.localPosition + Vector3.down;
-                        Debug.Log(virtualLayerLocalPosition);
                         Vector3 virtualLayerWorldPosition = gridPlane.TransformPoint(virtualLayerLocalPosition);
-                        peakPos.Add((virtualLayerLocalPosition, virtualLayerWorldPosition));
+                        peakPos.Add(((0, y, x), virtualLayerWorldPosition));
                     }
                 }
             }
             else {
-                foreach( var row in _peaks) {
-                    foreach (var tile in row) {
-                        peakPos.Add((tile.transform.localPosition, tile.transform.position));
+                for (var y = 0; y < _peaks.Length; y++) {
+                    var row = _peaks[y];
+                    for (var x = 0; x < row.Length; x++) {
+                        var (z, tile) = row[x];
+                        peakPos.Add(((z, y, x), tile.transform.position));
                     }
                 }    
             }
@@ -284,7 +287,7 @@ namespace Scripts {
                     for (int z = _grid.Count - 1; z >= 0; z--) {
                         if (_grid[z][y][x].transform.childCount > 0) {
                             Debug.Log($"Find grid piece for ({x},{y})");
-                            _peaks[y][x] = _grid[z][y][x];
+                            _peaks[y][x] = (z, _grid[z][y][x]);
                             break;
                         }
                     }
@@ -320,12 +323,12 @@ namespace Scripts {
         }
 
         private void Awake() {
-            _peaks = new GameObject[PlaneHeight][];
+            _peaks = new(int, GameObject)[PlaneHeight][];
             scalerFromGridToLocal = new Vector3(transform.localScale.x / PlaneWidth,transform.localScale.z / PlaneHeight,0);
             scalerFromGridToLocal.z = (scalerFromGridToLocal.x + scalerFromGridToLocal.y) / 2;
 
             for (var y = 0; y < PlaneHeight; y++) {
-                _peaks[y] = new GameObject[PlaneWidth];
+                _peaks[y] = new (int, GameObject)[PlaneWidth];
             }
             
             RecalculatePeaks();
