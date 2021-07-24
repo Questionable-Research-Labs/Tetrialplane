@@ -71,7 +71,7 @@ namespace Scripts {
                 block.transform.SetParent(gridPlane);
 
                 var parentTransform = _grid[blockZ][y + (int) blockPosition.y][x + (int) blockPosition.x].transform;
-                
+
                 block.transform.SetParent(parentTransform);
             }
 
@@ -154,14 +154,15 @@ namespace Scripts {
 
             yield return null;
         }
-        
+
         /**
          * <summary>
          * Finds all of the empty spaces then returns them in a tuple, with the first element is the index of the element in the grid,
          * and the second is the location in world space
          * </summary>
          */
-        public IEnumerator<Tuple<Vector3, Vector3>> GetEmptySpaces() {
+        public List<Tuple<Vector3, Vector3>> GetEmptySpaces() {
+            var emptySpaces = new List<Tuple<Vector3, Vector3>>();
             // Loop through all the planes
             for (var z = 0; z < _grid.Count; z++) {
                 // Get the current plane
@@ -178,11 +179,13 @@ namespace Scripts {
                         var tile = row[x];
                         // Check to see if the tile is empty
                         if (tile.transform.childCount == 0) {
-                            yield return new Tuple<Vector3, Vector3>(new Vector3(z,y,x), tile.transform.position);
+                            emptySpaces.Add(new Tuple<Vector3, Vector3>(new Vector3(z, y, x), tile.transform.position));
                         }
                     }
                 }
             }
+
+            return emptySpaces;
         }
 
         /** <summary>
@@ -194,8 +197,8 @@ namespace Scripts {
             var z = _grid.Count;
 
             for (var y = 0; y < PlaneHeight; y++) {
-                var row = new GameObject[PlaneWidth]; 
-                
+                var row = new GameObject[PlaneWidth];
+
                 for (var x = 0; x < PlaneWidth; x++) {
                     var newObject = new GameObject($"X: {x}, Y: {y}, Z: {z}");
                     newObject.transform.SetParent(gridPlane);
@@ -204,7 +207,7 @@ namespace Scripts {
 
                 columns[y] = row;
             }
-            
+
             _grid.Add(columns);
         }
 
