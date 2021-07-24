@@ -57,12 +57,12 @@ public class FlyingController : MonoBehaviour
 
     private void CreatePieceObject()
     {
-        var random = Random.Range(0, pieces.Length - 1);
-        var originalObject = pieces[random];
+        int random = Random.Range(0, pieces.Length - 1);
+        GameObject originalObject = pieces[random];
 
-        var bounds = gameArea.bounds;
-        var boundsMin = bounds.min;
-        var boundsMax = bounds.max;
+        Bounds bounds = gameArea.bounds;
+        Vector3 boundsMin = bounds.min;
+        Vector3 boundsMax = bounds.max;
 
         /*var position = new Vector3(
             Random.Range(boundsMin.x, boundsMax.x),
@@ -70,17 +70,21 @@ public class FlyingController : MonoBehaviour
             Random.Range(boundsMin.z, boundsMax.z)
         );
         */
-        var position = new Vector3(0, 3, 0);
+        Vector3 position = new Vector3(0, 3, 0);
+        // Quaternion rotation = Random.rotation;
+        Quaternion rotation = new Quaternion(0,0,0,0);
 
-        var newObject = Instantiate(originalObject, position, Random.rotation);
+
+        GameObject newObject = Instantiate(originalObject, position, rotation);
         newObject.transform.localScale = pieceScale;
-        var rigidBody = newObject.GetComponentInChildren<Rigidbody>();
+        Rigidbody rigidBody = newObject.GetComponentInChildren<Rigidbody>();
 
-        var velocity = new Vector3(
-            Random.Range(minVelocity.x, maxVelocity.x),
-            Random.Range(minVelocity.y, maxVelocity.y),
-            Random.Range(minVelocity.z, maxVelocity.z)
-        );
+        // var Vector3 = new Vector3(
+        //     Random.Range(minVelocity.x, maxVelocity.x),
+        //     Random.Range(minVelocity.y, maxVelocity.y),
+        //     Random.Range(minVelocity.z, maxVelocity.z)
+        // );
+        Vector3 velocity = new Vector3(0, -5, 0);
 
         rigidBody.velocity = velocity;
     }
