@@ -157,6 +157,39 @@ namespace Scripts {
                 : BlockPositionValidity.Floating;
         }
         
+        /**
+         * <summary>
+         * Finds all of the empty spaces then returns them in a tuple, with the first element is the index of the element in the grid,
+         * and the second is the location in world space
+         * </summary>
+         */
+        public List<Tuple<Vector3, Vector3>> GetEmptySpaces() {
+            var emptySpaces = new List<Tuple<Vector3, Vector3>>();
+            // Loop through all the planes
+            for (var z = 0; z < _grid.Count; z++) {
+                // Get the current plane
+                var plane = _grid[z];
+
+                // Iterate through the rows
+                for (var y = 0; y < plane.Length; y++) {
+                    // Get the current row
+                    var row = plane[y];
+
+                    // Iterate through all the tiles
+                    for (var x = 0; x < row.Length; x++) {
+                        // Get the current tile
+                        var tile = row[x];
+                        // Check to see if the tile is empty
+                        if (tile.transform.childCount == 0) {
+                            emptySpaces.Add(new Tuple<Vector3, Vector3>(new Vector3(z, y, x), tile.transform.position));
+                        }
+                    }
+                }
+            }
+
+            return emptySpaces;
+        }
+
         /** <summary>
          * Removes any full planes, and updates the grid GameObject positions
          * </summary>
