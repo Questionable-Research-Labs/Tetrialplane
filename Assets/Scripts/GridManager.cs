@@ -12,7 +12,7 @@ namespace Scripts {
          * </summary>
          */
         public ScoreManager scoreManager;
-        
+
         /** <summary>
          * The width of each plane
          * </summary>
@@ -24,11 +24,6 @@ namespace Scripts {
          * </summary>
          */
         public const int PlaneHeight = 10;
-        /** <summary>
-         * The size of each cube
-         * </summary>
-         */
-        public const float CubeSize = 0.1F;
 
         /** <summary>
          * The object used to parent the game object
@@ -75,7 +70,9 @@ namespace Scripts {
 
                 block.transform.SetParent(gridPlane);
 
-                _grid[blockZ][y + (int) blockPosition.y][x + (int) blockPosition.x] = block;
+                var parentTransform = _grid[blockZ][y + (int) blockPosition.y][x + (int) blockPosition.x].transform;
+                
+                block.transform.SetParent(parentTransform);
             }
 
             if (blocksMissed != 0) {
@@ -91,7 +88,7 @@ namespace Scripts {
         public IEnumerator UpdateGrid() {
             // Create a temporary grid to store the updated grid
             var tempGrid = new List<GameObject[][]>();
-            
+
             // Create a variable to store how many planes where cleared
             var cleared = 0;
 
@@ -101,11 +98,9 @@ namespace Scripts {
                 var foundEmptyTile = false;
 
                 // Loop through all the rows
-                foreach (var row in plane)
-                {
+                foreach (var row in plane) {
                     // Loop through all the tiles
-                    if (row.Any(tile => tile == null))
-                    {
+                    if (row.Any(tile => tile.transform.childCount > 0)) {
                         foundEmptyTile = true;
                     }
 
@@ -133,7 +128,7 @@ namespace Scripts {
             if (cleared != 0) {
                 scoreManager.PlanesCleared(cleared);
             }
-            
+
             _grid = tempGrid;
 
             // Loop through all the planes
@@ -152,12 +147,42 @@ namespace Scripts {
                         var tile = row[x];
                         // Set the position of the object
                         var tileTransform = tile.transform;
-                        tileTransform.position = new Vector3(x, y, z);
+                        tileTransform.localPosition = new Vector3(x, y, z);
                     }
                 }
             }
 
             yield return null;
+        }
+        
+        /**
+         * <summary>
+         * Finds all of the empty spaces then returns them in a tuple, with the first element is the index of the element in the grid,
+         * and the second is the location in world space
+         * </summary>
+         */
+        public IEnumerator<Tuple<Vector3, Vector3>> GetEmptySpaces() {
+            // Loop through all the planes
+            for (var z = 0; z < _grid.Count; z++) {
+                // Get the current plane
+                var plane = _grid[z];
+
+                // Iterate through the rows
+                for (var y = 0; y < plane.Length; y++) {
+                    // Get the current row
+                    var row = plane[y];
+
+                    // Iterate through all the tiles
+                    for (var x = 0; x < row.Length; x++) {
+                        // Get the current tile
+                        var tile = row[x];
+                        // Check to see if the tile is empty
+                        if (tile.transform.childCount == 0) {
+                            yield return new Tuple<Vector3, Vector3>(new Vector3(z,y,x), tile.transform.position);
+                        }
+                    }
+                }
+            }
         }
 
         /** <summary>
@@ -168,8 +193,22 @@ namespace Scripts {
             var columns = new GameObject[PlaneHeight][];
 
             for (var i = 0; i < PlaneHeight; i++) {
-                columns[i] = new GameObject[PlaneWidth];
+                var row = new GameObject[PlaneWidth]; 
+                
+                for (var ii = 0; ii < PlaneWidth; ii++) {
+                    var newObject = new GameObject();
+                    newObject.transform.SetParent(gridPlane);
+                    row[ii] = newObject;
+                }
+
+                columns[i] = row;
             }
+            
+            _grid.Add(columns);
+        }
+
+        private void Start() {
+            AddPlane();
         }
     }
 }
