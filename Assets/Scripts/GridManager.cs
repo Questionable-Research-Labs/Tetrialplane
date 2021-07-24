@@ -138,7 +138,25 @@ namespace Scripts {
 
             return peakPos;
         }
+        
+        public BlockPositionValidity ValidBlockPosition(int x, int y, int z) {
+            if (_grid[z][y][x].transform.childCount > 0) {
+                return BlockPositionValidity.SpaceTaken;
+            }
 
+            if (x > PlaneWidth || y > PlaneHeight) {
+                return BlockPositionValidity.OutOfBounds;
+            }
+
+            if (z == 0) {
+                return BlockPositionValidity.Connected;
+            }
+            
+            return _grid[z - 1][y][x].transform.childCount > 0 
+                ? BlockPositionValidity.Connected 
+                : BlockPositionValidity.Floating;
+        }
+        
         /** <summary>
          * Removes any full planes, and updates the grid GameObject positions
          * </summary>
