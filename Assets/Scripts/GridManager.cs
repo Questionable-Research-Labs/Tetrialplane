@@ -191,17 +191,18 @@ namespace Scripts {
          */
         private void AddPlane() {
             var columns = new GameObject[PlaneHeight][];
+            var z = _grid.Count;
 
-            for (var i = 0; i < PlaneHeight; i++) {
+            for (var y = 0; y < PlaneHeight; y++) {
                 var row = new GameObject[PlaneWidth]; 
                 
-                for (var ii = 0; ii < PlaneWidth; ii++) {
-                    var newObject = new GameObject();
+                for (var x = 0; x < PlaneWidth; x++) {
+                    var newObject = new GameObject($"X: {x}, Y: {y}, Z: {z}");
                     newObject.transform.SetParent(gridPlane);
-                    row[ii] = newObject;
+                    row[x] = newObject;
                 }
 
-                columns[i] = row;
+                columns[y] = row;
             }
             
             _grid.Add(columns);
