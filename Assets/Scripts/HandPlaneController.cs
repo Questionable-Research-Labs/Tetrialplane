@@ -72,8 +72,14 @@ public class HandPlaneController : MonoBehaviour {
                 bestBlocksInPiece.Add((blockTransform,cellMagnitudes[0].Item1,cellMagnitudes[0].Item2));
 
             }
+
+            if (bestBlocksInPiece.Count == 0) {
+                yield break;
+            }
+            
             // Sort for the best
             bestBlocksInPiece.Sort((x, y) => x.Item3.CompareTo(y.Item3));
+
             if (bestBlocksInPiece[0].Item3 <= snapDistThreshold) {
                 // the close block
                 // (blockTransform,chosenCell,dist)

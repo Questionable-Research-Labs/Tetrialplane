@@ -820,7 +820,7 @@ MonoBehaviour:
   gameArea: {fileID: 1965529760}
   minVelocity: {x: -5, y: -5, z: -5}
   maxVelocity: {x: 5, y: 5, z: 5}
-  pieceScale: {x: 0.05, y: 0.05, z: 0.05}
+  pieceScale: {x: 0.1, y: 0.1, z: 0.1}
 --- !u!4 &1965529759
 Transform:
   m_ObjectHideFlags: 0

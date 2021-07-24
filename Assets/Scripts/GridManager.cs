@@ -88,7 +88,7 @@ namespace Scripts {
                 }
 
                 // Get the transform of the gameobject in the grid to use as transform parent
-                var parentTransform = _grid[blockZ][y + (int) blockPosition.y][x + (int) blockPosition.x].transform;
+                var parentTransform = _grid[blockZ-1][y + (int) blockPosition.y][x + (int) blockPosition.x].transform;
 
                 // Parent the block
                 block.transform.SetParent(parentTransform);
@@ -273,8 +273,7 @@ namespace Scripts {
                         // Get the current tile
                         var tile = row[x];
                         // Set the position of the object
-                        var tileTransform = tile.transform;
-                        tileTransform.localPosition = new Vector3(x, y, z);
+                        tile.transform.localPosition = ConvertFromGridIDToLocalSpace(x,y,z);
                     }
                 }
             }

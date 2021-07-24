@@ -26,10 +26,13 @@ public class FlyingController : MonoBehaviour {
     
     // Start is called before the first frame update
     private void Start() {
-        var i = 0;
-        while (i < 1) {
+        StartCoroutine(SlowlyCreatePieceObjects());
+    }
+
+    private IEnumerator SlowlyCreatePieceObjects() {
+        while (true) {
             CreatePieceObject();
-            i++;
+            yield return new WaitForSeconds(3f);
         }
     }
 
