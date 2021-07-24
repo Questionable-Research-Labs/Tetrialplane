@@ -6,6 +6,13 @@ using UnityEngine;
 
 namespace Scripts {
     public class GridManager : MonoBehaviour {
+        /**
+         * <summary>
+         * The score manager
+         * </summary>
+         */
+        public ScoreManager scoreManager;
+        
         /** <summary>
          * The width of each plane
          * </summary>
@@ -44,6 +51,7 @@ namespace Scripts {
          * <param name="z">The Z position, in terms of the grid, where the origin block collided</param>
          */
         public IEnumerator<GameObject> AddBlocksToGrid(GameObject[] blocks, int x, int y, int z) {
+            int blocksMissed = 0;
             foreach (var block in blocks) {
                 var blockPosition = block.transform.position;
                 var blockZ = (int) Math.Floor(blockPosition.z) + z;
@@ -56,12 +64,17 @@ namespace Scripts {
 
                 if (x + 1 > planeWidth || y + 1 > planeHeight) {
                     yield return block;
+                    blocksMissed++;
                     continue;
                 }
 
                 block.transform.SetParent(gridPlane);
 
                 _grid[blockZ][y + (int) blockPosition.y][x + (int) blockPosition.x] = block;
+            }
+
+            if (blocksMissed != 0) {
+                scoreManager.PieceMissed(blocksMissed);
             }
         }
 
@@ -73,6 +86,9 @@ namespace Scripts {
         public IEnumerator UpdateGrid() {
             // Create a temporary grid to store the updated grid
             var tempGrid = new List<GameObject[][]>();
+            
+            // Create a variable to store how many planes where cleared
+            var cleared = 0;
 
             // Loop through all planes
             foreach (var plane in _grid) {
@@ -100,6 +116,7 @@ namespace Scripts {
                 }
                 // Otherwise remove it from the grid, and destroy all the game objects
                 else {
+                    cleared++;
                     foreach (var row in plane) {
                         foreach (var tile in row) {
                             Destroy(tile);
@@ -108,6 +125,10 @@ namespace Scripts {
                 }
             }
 
+            if (cleared != 0) {
+                scoreManager.PlanesCleared(cleared);
+            }
+            
             _grid = tempGrid;
 
             // Loop through all the planes
