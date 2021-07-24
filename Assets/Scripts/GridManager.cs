@@ -62,39 +62,67 @@ namespace Scripts {
 
             // The missed blockes
             var missedBlocks = new List<GameObject>();
+            
+            // The blocks that landed in the grid
+            var validBlocks = new List<(GameObject, (int, int, int))>();
+            
+            // Weather or not a connected block was found
+            var foundConnected = false;
+
+            // Check to make sure all the blocks are valid
+            var blocksArray = blocks as GameObject[] ?? blocks.ToArray();
+            
+            foreach (var block in blocksArray) {
+                // Get the local position
+                var localPosition = block.transform.localPosition;
+                
+                // Calculate the block positions in the grid
+                int blockX = Mathf.FloorToInt(localPosition.x) + x;
+                int blockY = Mathf.FloorToInt(localPosition.y) + y;
+                int blockZ = Mathf.FloorToInt(localPosition.z) + z;
+
+                // Check whether the block is in a valid position
+                switch (ValidBlockPosition(blockX, blockY, blockZ)) {
+                    case BlockPositionValidity.Connected:
+                        foundConnected = true;
+                        validBlocks.Add((block, (blockX, blockY, blockZ)));
+                        break;
+                    case BlockPositionValidity.Floating:
+                        validBlocks.Add((block, (blockX, blockY, blockZ)));
+                        break;
+                    case BlockPositionValidity.OutOfBounds:
+                        missedBlocks.Add(block);
+                        break;
+                    case BlockPositionValidity.SpaceTaken:
+                        return blocksArray.ToList();
+                }
+            }
+            
+            // Return the entire array if no valid blocks were found
+            if (!foundConnected) {
+                return blocksArray.ToList();
+            }
 
             // Loop through all the blocks being added to the grid
-            foreach (var block in blocks) {
-                // Get the position of the block
-                var blockPosition = block.transform.localPosition;
-
-                // Get the z position of the block
-                var blockZ = (int) Math.Floor(blockPosition.z) + z;
-
+            foreach (var (block, (blockX, blockY, blockZ)) in validBlocks) {
                 // Add any necessary planes to account for new blocks 
                 if (blockZ >= _grid.Count) {
                     for (var i = 0; i < blockZ - _grid.Count; i++) {
                         AddPlane();
                     }
                 }
-
-                // Check to make sure that the block has landed in the grid
-                if (x + 1 > PlaneWidth || y + 1 > PlaneHeight) {
-                    // Return the block
-                    missedBlocks.Add(block);
-                    // Increment the number of missed blocks
-                    blocksMissedCount++;
-                    continue;
-                }
-
+                
                 // Get the transform of the gameobject in the grid to use as transform parent
-                var parentTransform = _grid[blockZ-1][y + (int) blockPosition.y][x + (int) blockPosition.x].transform;
+                var parentTransform = _grid[blockZ-1][blockY][blockX].transform;
 
                 // Parent the block
                 block.transform.SetParent(parentTransform);
 
                 // Set it's local position to 0
                 block.transform.localPosition = Vector3.zero;
+                
+                // Set the blocks rotation to 0
+                block.transform.localRotation = Quaternion.identity;
             }
 
             // Deduct the points from the player
