@@ -196,7 +196,9 @@ namespace Scripts {
                 var row = new GameObject[PlaneWidth]; 
                 
                 for (var ii = 0; ii < PlaneWidth; ii++) {
-                    row[ii] = new GameObject();
+                    var newObject = new GameObject();
+                    newObject.transform.SetParent(gridPlane);
+                    row[ii] = newObject;
                 }
 
                 columns[i] = row;
