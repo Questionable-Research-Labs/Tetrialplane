@@ -17,13 +17,18 @@ namespace Scripts {
          * The width of each plane
          * </summary>
          */
-        public int planeWidth = 10;
+        public const int PlaneWidth = 10;
 
         /** <summary>
          * The height of each plane
          * </summary>
          */
-        public int planeHeight = 10;
+        public const int PlaneHeight = 10;
+        /** <summary>
+         * The size of each cube
+         * </summary>
+         */
+        public const float CubeSize = 0.1F;
 
         /** <summary>
          * The object used to parent the game object
@@ -51,7 +56,7 @@ namespace Scripts {
          * <param name="z">The Z position, in terms of the grid, where the origin block collided</param>
          */
         public IEnumerator<GameObject> AddBlocksToGrid(GameObject[] blocks, int x, int y, int z) {
-            int blocksMissed = 0;
+            var blocksMissed = 0;
             foreach (var block in blocks) {
                 var blockPosition = block.transform.position;
                 var blockZ = (int) Math.Floor(blockPosition.z) + z;
@@ -62,7 +67,7 @@ namespace Scripts {
                     }
                 }
 
-                if (x + 1 > planeWidth || y + 1 > planeHeight) {
+                if (x + 1 > PlaneWidth || y + 1 > PlaneHeight) {
                     yield return block;
                     blocksMissed++;
                     continue;
@@ -160,10 +165,10 @@ namespace Scripts {
          * </summary>
          */
         private void AddPlane() {
-            var columns = new GameObject[planeHeight][];
+            var columns = new GameObject[PlaneHeight][];
 
-            for (var i = 0; i < planeHeight; i++) {
-                columns[i] = new GameObject[planeWidth];
+            for (var i = 0; i < PlaneHeight; i++) {
+                columns[i] = new GameObject[PlaneWidth];
             }
         }
     }

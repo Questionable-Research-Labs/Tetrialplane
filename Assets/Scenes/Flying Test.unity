@@ -135,6 +135,8 @@ GameObject:
   - component: {fileID: 48219008}
   - component: {fileID: 48219007}
   - component: {fileID: 48219006}
+  - component: {fileID: 48219010}
+  - component: {fileID: 48219011}
   m_Layer: 0
   m_Name: HandPlane
   m_TagString: Untagged
@@ -213,12 +215,41 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48219005}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.262, z: 0}
+  m_LocalPosition: {x: 0, y: 2.262, z: 4.4}
   m_LocalScale: {x: 1, y: 0.08, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &48219010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48219005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aba65908a4d58664099ce0d6b0a7af5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transform: {fileID: 48219009}
+  gridManager: {fileID: 0}
+  planeHeight: 0.08
+--- !u!114 &48219011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48219005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 722f0d5ce412df6588eee8208875e656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreManager: {fileID: 0}
+  gridPlane: {fileID: 48219009}
 --- !u!1 &1849376585
 GameObject:
   m_ObjectHideFlags: 0
@@ -426,19 +457,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pieces:
-  - {fileID: 3754300725568522358, guid: 32507a4045076784280b9981cade15c2, type: 3}
-  - {fileID: 8339383183835777212, guid: c81ea2066b0d9424388259700eb909d6, type: 3}
-  - {fileID: 8077561259773234693, guid: 0420f61816cbd1f45a6cebb93d94b06e, type: 3}
-  - {fileID: 6494620428486430135, guid: 6a181b8e24bacf2448f99d863476a66a, type: 3}
-  - {fileID: 3696143095833128424, guid: 3731df181b440494c870048ec5330720, type: 3}
-  - {fileID: 3202825801769860386, guid: 937612d9323273f44a01335fc8c4d65d, type: 3}
-  - {fileID: 3721061976104842316, guid: b41978224b7c9a045bb81174c045fcff, type: 3}
+  - {fileID: 3672535087317460957, guid: 32507a4045076784280b9981cade15c2, type: 3}
+  - {fileID: 8023913448399378704, guid: c81ea2066b0d9424388259700eb909d6, type: 3}
+  - {fileID: 2606389540559754993, guid: 0420f61816cbd1f45a6cebb93d94b06e, type: 3}
+  - {fileID: 3201535561652148224, guid: 6a181b8e24bacf2448f99d863476a66a, type: 3}
+  - {fileID: 4571656937345101287, guid: 3731df181b440494c870048ec5330720, type: 3}
+  - {fileID: 4250530310317924193, guid: 937612d9323273f44a01335fc8c4d65d, type: 3}
+  - {fileID: 6942592413744802844, guid: b41978224b7c9a045bb81174c045fcff, type: 3}
   gameArea: {fileID: 1965529760}
   minVelocity: {x: -5, y: -5, z: -5}
   maxVelocity: {x: 5, y: 5, z: 5}
-  pieceScale: {x: 0.15, y: 0.15, z: 0.15}
-  score: 0
-  clearedScore: 100
 --- !u!4 &1965529759
 Transform:
   m_ObjectHideFlags: 0
