@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Scripts {
@@ -41,6 +42,8 @@ namespace Scripts {
         private List<GameObject[][]> _grid = new List<GameObject[][]>();
 
         private GameObject[][] _peaks;
+
+        private Vector3 scalerFromGridToLocal;
 
         /** <summary>
          * Adds a block to the grid
@@ -118,9 +121,9 @@ namespace Scripts {
             if (_grid.Count == 1) {
                 foreach( var row in _grid[0]) {
                     foreach (var tile in row) {
-                        Debug.Log($"Tile Transform {tile.transform.localPosition}");
-                        Vector3 virtualLayerLocalPosition = tile.transform.localPosition - Vector3.down;
-                        Vector3 virtualLayerWorldPosition = tile.transform.TransformPoint(virtualLayerLocalPosition);
+                        Vector3 virtualLayerLocalPosition = tile.transform.localPosition + Vector3.down;
+                        Debug.Log(virtualLayerLocalPosition);
+                        Vector3 virtualLayerWorldPosition = gridPlane.TransformPoint(virtualLayerLocalPosition);
                         peakPos.Add((virtualLayerLocalPosition, virtualLayerWorldPosition));
                     }
                 }
@@ -252,6 +255,7 @@ namespace Scripts {
 
                 for (var x = 0; x < PlaneWidth; x++) {
                     var newObject = new GameObject($"X: {x}, Y: {y}, Z: {z}");
+                    newObject.transform.SetPositionAndRotation(ConvertFromGridIDToLocalSpace(x,y,z),Quaternion.identity);
                     newObject.transform.SetParent(gridPlane);
                     row[x] = newObject;
                 }
@@ -266,12 +270,18 @@ namespace Scripts {
 
         private void Awake() {
             _peaks = new GameObject[PlaneHeight][];
+            scalerFromGridToLocal = new Vector3(transform.localScale.x / PlaneWidth,transform.localScale.z / PlaneHeight,0);
+            scalerFromGridToLocal.z = (scalerFromGridToLocal.x + scalerFromGridToLocal.y) / 2;
 
             for (var y = 0; y < PlaneHeight; y++) {
                 _peaks[y] = new GameObject[PlaneWidth];
             }
             
             RecalculatePeaks();
+        }
+
+        private Vector3 ConvertFromGridIDToLocalSpace(int x, int y,int z) {
+            return new Vector3(x * scalerFromGridToLocal.x-transform.localScale.x/2f,z*scalerFromGridToLocal.z,y *scalerFromGridToLocal.y-transform.localScale.z/2f);
         }
 
         private void Start() {

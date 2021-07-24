@@ -52,7 +52,6 @@ public class HandPlaneController : MonoBehaviour {
 
             List<(Vector3,Vector3)> peaks = gridManager.GetPeaks();
             foreach (var xPeak in peaks) {
-                Debug.Log($"Peak: {xPeak}");
             }
             // (blockTransform,chosenCell,dist)
             List<(Transform, Vector3, float)> bestBlocksInPiece = new List<(Transform, Vector3, float)>();
@@ -60,10 +59,11 @@ public class HandPlaneController : MonoBehaviour {
                 // Find distance from piece to every Peak
                 List<(Vector3, float)> cellMagnitudes = new List<(Vector3, float)>();
                 foreach ((Vector3 cellGridPos,Vector3 cellWorldPos) in peaks) {
-                    Vector3 topOfPiece = piece.transform.position - piece.transform.up*0.5f;
+                    Vector3 topOfPiece = piece.transform.position + piece.transform.TransformPoint(piece.transform.up*0.5f);
                     float dist = Vector3.Distance(topOfPiece, cellWorldPos);
                     cellMagnitudes.Add((cellGridPos,Vector3.Distance(topOfPiece,cellWorldPos)));  
-
+                    Debug.DrawRay(piece.transform.position, cellWorldPos-piece.transform.position, Color.green);
+                    // Debug.Log($"Piece: {piece.transform.position}, cell: {cellWorldPos}");
                 }
                 // Order Cell peaks tops by distance magnitude
                 cellMagnitudes.Sort((x, y) => x.Item2.CompareTo(y.Item2));
@@ -74,7 +74,6 @@ public class HandPlaneController : MonoBehaviour {
             }
             // Sort for the best
             bestBlocksInPiece.Sort((x, y) => x.Item3.CompareTo(y.Item3));
-            Debug.Break();
             if (bestBlocksInPiece[0].Item3 <= snapDistThreshold) {
                 // the close block
                 // (blockTransform,chosenCell,dist)
