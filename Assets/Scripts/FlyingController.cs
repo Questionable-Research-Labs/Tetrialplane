@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TreeEditor;
 using Unity.VisualScripting;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 public class FlyingController : MonoBehaviour
@@ -23,17 +24,11 @@ public class FlyingController : MonoBehaviour
     // The scale to give each spawned piece
     public Vector3 pieceScale;
 
-    // The current game score
-    public int score = 0;
-
-    // The amount to decrease the score by when a piece
-    public int clearedScore = 100;
-
     // Start is called before the first frame update
     private void Start()
     {
         var i = 0;
-        while (i < 2)
+        while (i < 1)
         {
             CreatePieceObject();
             i++;
@@ -47,13 +42,17 @@ public class FlyingController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (!other.CompareTag("Piece")) return;
         GameObjectLeave(other.gameObject);
     }
 
-    private void GameObjectLeave(GameObject gameObject)
+    private void GameObjectLeave(Object root)
     {
-        Destroy(gameObject);
+        Destroy(root);
+        if (root == null) return;
         CreatePieceObject();
+
+        // TODO: LOOSE POINT OUT OF REGION
     }
 
     private void CreatePieceObject()
@@ -65,11 +64,13 @@ public class FlyingController : MonoBehaviour
         var boundsMin = bounds.min;
         var boundsMax = bounds.max;
 
-        var position = new Vector3(
+        /*var position = new Vector3(
             Random.Range(boundsMin.x, boundsMax.x),
             Random.Range(boundsMin.y, boundsMax.y),
             Random.Range(boundsMin.z, boundsMax.z)
         );
+        */
+        var position = new Vector3(0, 3, 0);
 
         var newObject = Instantiate(originalObject, position, Random.rotation);
         newObject.transform.localScale = pieceScale;
