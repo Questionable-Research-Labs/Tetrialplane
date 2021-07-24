@@ -43,7 +43,7 @@ namespace Scripts {
 
         private (int, GameObject)[][] _peaks;
 
-        private Vector3 scalerFromGridToLocal;
+        private Vector3 _scalerFromGridToLocal;
 
         /** <summary>
          * Adds a block to the grid
@@ -56,7 +56,7 @@ namespace Scripts {
          * <param name="y">The Y position, in terms of the grid, where the origin block collided</param>
          * <param name="z">The Z position, in terms of the grid, where the origin block collided</param>
          */
-        public List<GameObject> AddBlocksToGrid(GameObject[] blocks, int x, int y, int z) {
+        public List<GameObject> AddBlocksToGrid(IEnumerable<GameObject> blocks, int x, int y, int z) {
             // The number of blocks that did not land on the grid
             var blocksMissedCount = 0;
 
@@ -332,8 +332,8 @@ namespace Scripts {
 
         private void Awake() {
             _peaks = new(int, GameObject)[PlaneHeight][];
-            scalerFromGridToLocal = new Vector3(transform.localScale.x / PlaneWidth,transform.localScale.z / PlaneHeight,0);
-            scalerFromGridToLocal.z = (scalerFromGridToLocal.x + scalerFromGridToLocal.y) / 2;
+            _scalerFromGridToLocal = new Vector3(transform.localScale.x / PlaneWidth,transform.localScale.z / PlaneHeight,0);
+            _scalerFromGridToLocal.z = (_scalerFromGridToLocal.x + _scalerFromGridToLocal.y) / 2;
 
             for (var y = 0; y < PlaneHeight; y++) {
                 _peaks[y] = new (int, GameObject)[PlaneWidth];
@@ -343,7 +343,7 @@ namespace Scripts {
         }
 
         private Vector3 ConvertFromGridIDToLocalSpace(int x, int y,int z) {
-            return new Vector3(x * scalerFromGridToLocal.x-transform.localScale.x/2f,z*scalerFromGridToLocal.z,y *scalerFromGridToLocal.y-transform.localScale.z/2f);
+            return new Vector3(x * _scalerFromGridToLocal.x-transform.localScale.x/2f,z*_scalerFromGridToLocal.z,y *_scalerFromGridToLocal.y-transform.localScale.z/2f);
         }
 
         private void Start() {

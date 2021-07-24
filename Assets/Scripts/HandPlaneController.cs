@@ -54,14 +54,14 @@ public class HandPlaneController : MonoBehaviour {
             foreach (var xPeak in peaks) {
             }
             // (blockTransform,chosenCell,dist)
-            List<(Transform, Vector3, float)> bestBlocksInPiece = new List<(Transform, Vector3, float)>();
+            List<(Transform, (int,int,int), float)> bestBlocksInPiece = new List<(Transform, (int,int,int), float)>();
             foreach (Transform blockTransform in piece.transform) {
                 // Find distance from piece to every Peak
-                List<(Vector3, float)> cellMagnitudes = new List<(Vector3, float)>();
+                List<((int,int,int), float)> cellMagnitudes = new List<((int,int,int), float)>();
                 foreach (((int cellZ, int cellY, int cellX),Vector3 cellWorldPos) in peaks) {
-                    Vector3 topOfPiece = piece.transform.position + piece.transform.TransformPoint(piece.transform.up*0.5f);
-                    float dist = Vector3.Distance(topOfPiece, cellWorldPos);
-                    cellMagnitudes.Add((new Vector3(cellX, cellY, cellZ),Vector3.Distance(piece.transform.position,cellWorldPos)));  
+                    // Vector3 topOfPiece = piece.transform.position + piece.transform.TransformPoint(piece.transform.up*0.5f);
+                    float dist = Vector3.Distance(piece.transform.position,cellWorldPos);
+                    cellMagnitudes.Add(((cellX, cellY, cellZ),dist));  
                     Debug.DrawRay(piece.transform.position, cellWorldPos-piece.transform.position, Color.green);
                     Debug.Log($"Piece: {new Vector3(cellX, cellY, cellZ)}, cell: {cellWorldPos}");
                 }
@@ -77,14 +77,14 @@ public class HandPlaneController : MonoBehaviour {
             if (bestBlocksInPiece[0].Item3 <= snapDistThreshold) {
                 // the close block
                 // (blockTransform,chosenCell,dist)
-                (Transform, Vector3, float) closeBlock = bestBlocksInPiece[0];
+                (Transform, (int,int,int), float) closeBlock = bestBlocksInPiece[0];
 
                 // Sort for the worst
                 bestBlocksInPiece.Sort((x, y) => y.Item3.CompareTo(x.Item3));
             
                 // the far block
                 // (blockTransform,chosenCell,dist)
-                (Transform, Vector3, float) farBlock = bestBlocksInPiece[0];
+                (Transform, (int,int,int), float) farBlock = bestBlocksInPiece[0];
 
                 Vector3 rotationOfPiece =
                     Vector3.RotateTowards(closeBlock.Item1.position, farBlock.Item1.position, 6.28319f, 0.0f);
@@ -100,8 +100,25 @@ public class HandPlaneController : MonoBehaviour {
 
                 if (closeEnoughToSnap) {
                     Debug.Log("SUCESSSSSSUS");
+
+                    var closeBlockLocalPos = closeBlock.Item1.localPosition;
+                    var objs = new List<GameObject>();
+                    
+                    foreach (Transform block in piece.transform) {
+                        block.localPosition -= closeBlockLocalPos;
+                        objs.Add(block.gameObject);
+                    }
+                    
+                    // the block snapped to
+                    (int, int, int) snappingPosition = closeBlock.Item2;
+                    // adjust so it is above the snapped block
+                    snappingPosition.Item3++;
+
+                    gridManager.AddBlocksToGrid(objs, snappingPosition.Item1, snappingPosition.Item2,
+                        snappingPosition.Item3);
+
                     // Time to snap the blocks to the new positions
-                    List<(GameObject, (int, int, int))> snappedBlocks = new List<(GameObject, (int, int, int))>();
+                    /*List<(GameObject, (int, int, int))> snappedBlocks = new List<(GameObject, (int, int, int))>();
                     // (Grid ID, World Space)
                     List<Tuple<(int,int,int), Vector3>> emptyCells = gridManager.GetEmptySpaces();
                     foreach (Transform blockTransform in piece.transform) {
@@ -143,7 +160,7 @@ public class HandPlaneController : MonoBehaviour {
                     }
                     else {
                         Debug.Log("Whelp can't do the snap because not vield");
-                    }
+                    }*/
                 }
                 else {
                     Debug.Log("NOOOOOOOOO");
