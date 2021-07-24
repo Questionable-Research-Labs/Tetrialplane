@@ -66,7 +66,7 @@ namespace Scripts {
             // Loop through all the blocks being added to the grid
             foreach (var block in blocks) {
                 // Get the position of the block
-                var blockPosition = block.transform.position;
+                var blockPosition = block.transform.localPosition;
 
                 // Get the z position of the block
                 var blockZ = (int) Math.Floor(blockPosition.z) + z;
@@ -166,8 +166,8 @@ namespace Scripts {
          * and the second is the location in world space
          * </summary>
          */
-        public List<Tuple<Vector3, Vector3>> GetEmptySpaces() {
-            var emptySpaces = new List<Tuple<Vector3, Vector3>>();
+        public List<Tuple<(int,int,int), Vector3>> GetEmptySpaces() {
+            var emptySpaces = new List<Tuple<(int,int,int), Vector3>>();
             // Loop through all the planes
             for (var z = 0; z < _grid.Count; z++) {
                 // Get the current plane
@@ -184,7 +184,8 @@ namespace Scripts {
                         var tile = row[x];
                         // Check to see if the tile is empty
                         if (tile.transform.childCount == 0) {
-                            emptySpaces.Add(new Tuple<Vector3, Vector3>(new Vector3(z, y, x), tile.transform.position));
+                            //Returns Grid ID and World Transform
+                            emptySpaces.Add(new Tuple<(int,int,int), Vector3>((x, y, z), tile.transform.position));
                         }
                     }
                 }

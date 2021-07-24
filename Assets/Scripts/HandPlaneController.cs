@@ -100,12 +100,47 @@ public class HandPlaneController : MonoBehaviour {
 
                 if (closeEnoughToSnap) {
                     Debug.Log("SUCESSSSSSUS");
+                    // Time to snap the blocks to the new positions
+                    List<(GameObject, (int, int, int))> snappedBlocks = new List<(GameObject, (int, int, int))>();
+                    // (Grid ID, World Space)
+                    List<Tuple<(int,int,int), Vector3>> emptyCells = gridManager.GetEmptySpaces();
+                    foreach (Transform blockTransform in piece.transform) {
+                        Tuple<(int,int,int), float> minDist = new Tuple<(int,int,int), float>((-1,-1,-1), float.MaxValue); 
+                        foreach (Tuple<(int,int,int), Vector3> emptyCell in emptyCells) {
+                            float dist = Vector3.Distance(emptyCell.Item2, blockTransform.transform.position);
+                            if (dist < minDist.Item2) {
+                                minDist = new Tuple<(int, int, int), float>(emptyCell.Item1, dist);
+                            }
+                        }
+                    }
+                    
                     // Check that block placement is valid
                     bool oneBlockConnected = false;
                     bool allBlocksVaild = true;
                     
-                    foreach (Transform blockTransform in piece.transform) {
-                        
+                    foreach ((GameObject _,(int x, int y, int z)) in snappedBlocks) {
+                        switch (gridManager.ValidBlockPosition(x,y,z)) {
+                            case BlockPositionValidity.Connected:
+                                oneBlockConnected = true;
+                                break;
+                            case BlockPositionValidity.SpaceTaken:
+                                allBlocksVaild = false;
+                                break;
+                            case BlockPositionValidity.OutOfBounds:
+                                // To implement Splitting, for now, don't snap
+                                allBlocksVaild = false;
+                                break;
+                        }
+                    }
+                    
+                    if (oneBlockConnected && allBlocksVaild) {
+                        Debug.Log("Time to Insert into grid");
+                        foreach ((GameObject innerBlock,(int x, int y, int z)) in snappedBlocks) {
+                            gridManager.AddBlocksToGrid(innerBlock,x,y,z);
+                        }
+                    }
+                    else {
+                        Debug.Log("Whelp can't do the snap because not vield");
                     }
                 }
                 else {
