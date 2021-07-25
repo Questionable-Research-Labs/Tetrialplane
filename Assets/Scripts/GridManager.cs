@@ -359,10 +359,10 @@ namespace Scripts {
 
                 for (var x = 0; x < PlaneWidth; x++) {
                     // var newObject = new GameObject($"X: {x}, Y: {y}, Z: {z}");
-                    GameObject newObject = Instantiate(emptyTileGameObjectPrefab,ConvertFromGridIDToLocalSpace(x,y,z),Quaternion.identity);
+                    GameObject newObject = Instantiate(emptyTileGameObjectPrefab, gridPlane, true);
                     
                     // newObject.transform.SetPositionAndRotation(ConvertFromGridIDToLocalSpace(x,y,z),Quaternion.identity);
-                    newObject.transform.SetParent(gridPlane);
+                    newObject.transform.localPosition = ConvertFromGridIDToLocalSpace(x, y, z);
                     newObject.name = $"X: {x}, Y: {y}, Z: {z}";
                     if (z > 0) {
                         Debug.Log("YESYESYSYEYSEYSEYD");
