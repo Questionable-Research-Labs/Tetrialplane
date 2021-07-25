@@ -34,6 +34,9 @@ namespace Scripts {
          * </summary>
          */
         public Transform gridPlane;
+        
+        public GameObject emptyTileGameObjectPrefab;
+
 
         /** <summary>
          * The planes on the players hand
@@ -46,6 +49,9 @@ namespace Scripts {
         private (int, GameObject)?[][] _peaks;
 
         private Vector3 _scalerFromGridToLocal;
+
+        public int countAddPlane = 0;
+
 
         /** <summary>
          * Adds a block to the grid
@@ -340,14 +346,21 @@ namespace Scripts {
         private void AddPlane() {
             var columns = new GameObject[PlaneHeight][];
             var z = _grid.Count;
+            countAddPlane += 1;
 
             for (var y = 0; y < PlaneHeight; y++) {
                 var row = new GameObject[PlaneWidth];
 
                 for (var x = 0; x < PlaneWidth; x++) {
-                    var newObject = new GameObject($"X: {x}, Y: {y}, Z: {z}");
-                    newObject.transform.SetPositionAndRotation(ConvertFromGridIDToLocalSpace(x,y,z),Quaternion.identity);
+                    // var newObject = new GameObject($"X: {x}, Y: {y}, Z: {z}");
+                    GameObject newObject = Instantiate(emptyTileGameObjectPrefab,ConvertFromGridIDToLocalSpace(x,y,z),Quaternion.identity);
+                    
+                    // newObject.transform.SetPositionAndRotation(ConvertFromGridIDToLocalSpace(x,y,z),Quaternion.identity);
                     newObject.transform.SetParent(gridPlane);
+                    newObject.name = $"X: {x}, Y: {y}, Z: {z}";
+                    if (z > 0) {
+                        Debug.Log("YESYESYSYEYSEYSEYD");
+                    }
                     row[x] = newObject;
                 }
 
