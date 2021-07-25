@@ -132,6 +132,7 @@ namespace Scripts {
                 block.transform.localPosition = Vector3.zero;
                 
                 // Set the blocks rotation to 0
+                block.transform.rotation = Quaternion.identity;
             }
 
             // Deduct the points from the player

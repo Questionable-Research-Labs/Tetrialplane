@@ -11,6 +11,8 @@ public class HandPlaneController : MonoBehaviour {
     public float planeHeight;
     private List<GameObject> enabledPieces = new List<GameObject>();
     public float snapDistThreshold = 0.6f;
+    public List<GameObject> removablePeices = new List<GameObject>();
+
 
     // Start is called before the first frame update
     private void Start() {
@@ -45,10 +47,17 @@ public class HandPlaneController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         ComputeSnapping();
+        Debug.Log($"Checking if {removablePeices} has peices");
+        foreach (var piece in removablePeices) {
+            Debug.Log($"Removing Peice {piece.name}");
+            RemovePieceFromActive(piece);
+            Destroy(piece);
+            Debug.Log("Removed peice");
+
+        }
     }
 
     void ComputeSnapping() {
-        var removablePeices = new List<GameObject>();
         foreach (GameObject piece in enabledPieces) {
             if (piece == null) {
                 continue;
@@ -123,8 +132,9 @@ public class HandPlaneController : MonoBehaviour {
                     Debug.Log($"Adding to grid");
                     List<GameObject> blocksMissed = gridManager.AddBlocksToGrid(objs, snappingPosition.Item1, snappingPosition.Item2,
                         snappingPosition.Item3);
-                    Debug.Log($"Added blocks minus {blocksMissed}");
+                    Debug.Log($"Added blocks minus {blocksMissed.Count}");
                     if (blocksMissed.Count == 0) {
+                        Debug.Log($"Added PEICE {piece.name}");
                         removablePeices.Add(piece);
                     }
 
@@ -189,10 +199,6 @@ public class HandPlaneController : MonoBehaviour {
             }
         }
         
-        foreach (var piece in removablePeices) {
-            RemovePieceFromActive(piece);
-            Destroy(piece);
-        }
     } 
 
     private static GameObject GetRoot(GameObject gameObject) {
