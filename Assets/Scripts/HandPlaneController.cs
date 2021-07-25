@@ -14,7 +14,6 @@ public class HandPlaneController : MonoBehaviour {
 
     // Start is called before the first frame update
     private void Start() {
-        transform.localScale = new Vector3(0.1f * GridManager.PlaneWidth, planeHeight, 0.1f * GridManager.PlaneHeight);
     }
 
 
