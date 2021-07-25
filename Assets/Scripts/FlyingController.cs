@@ -74,19 +74,14 @@ public class FlyingController : MonoBehaviour {
             Random.Range(boundsMin.z, boundsMax.z)
         );
 
-        var rotation = Random.rotation;
+;
 
 
-        var newObject = Instantiate(originalObject, position, rotation);
+        var newObject = Instantiate(originalObject, position, Quaternion.identity);
         newObject.transform.localScale = pieceScale;
+        newObject.transform.LookAt(new Vector3(0f,Random.Range(-4f, 4f),0f));
         var rigidBody = newObject.GetComponent<Rigidbody>();
+        rigidBody.velocity = newObject.transform.forward * Random.Range(1f,4f);
 
-        var velocity = new Vector3(
-            Random.Range(minVelocity.x, maxVelocity.x),
-            Random.Range(minVelocity.y, maxVelocity.y),
-            Random.Range(minVelocity.z, maxVelocity.z)
-        );
-
-        rigidBody.velocity = velocity;
     }
 }
