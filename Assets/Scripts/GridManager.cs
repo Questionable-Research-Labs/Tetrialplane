@@ -86,10 +86,9 @@ namespace Scripts {
                 
                 // Calculate the block positions in the grid
                 int blockX = localPosition.x + x;
-                int blockY = localPosition.y + y;
-                int blockZ = localPosition.z + z;
-                
-                Debug.DrawLine(ConvertFromGridIDToLocalSpace(blockX,blockY,blockZ),block.Item2.transform.position-ConvertFromGridIDToLocalSpace(blockX,blockY,blockZ),Color.red);
+                int blockY = localPosition.z + y;
+                int blockZ = localPosition.y + z ;
+                Debug.DrawLine(ConvertFromGridIDToLocalSpace(blockX,blockY,blockZ),block.Item2.transform.position -ConvertFromGridIDToLocalSpace(blockX,blockY,blockZ),Color.red,1000f);
 
                 while (blockZ + 1 >= _grid.Count) {
                     Debug.Log("Adding Plane");
@@ -192,6 +191,10 @@ namespace Scripts {
         }
         
         public BlockPositionValidity ValidBlockPosition(int x, int y, int z) {
+            if (z >= _grid.Count) {
+                Debug.Log($"Z bigger GRID lol {z} {_grid.Count}");
+                Debug.Break();
+            }
             if (_grid[z][y][x].transform.childCount > 0) {
                 return BlockPositionValidity.SpaceTaken;
             }

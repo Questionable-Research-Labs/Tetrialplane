@@ -123,7 +123,7 @@ public class HandPlaneController : MonoBehaviour {
                         snappingPosition.Item3);
                     Debug.Log($"Added blocks minus {blocksMissed.Count}");
                     if (blocksMissed.Count == 0) {
-                        Debug.Log($"Added PEICE {piece.name}");
+                        Debug.Log($"Added PIECE {piece.name}");
                         removablePeices.Add(piece);
                     }
 

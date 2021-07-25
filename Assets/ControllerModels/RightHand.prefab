@@ -243,6 +243,7 @@ MonoBehaviour:
   gridManager: {fileID: 3148222003680418879}
   planeHeight: 1
   snapDistThreshold: 0.6
+  removablePeices: []
 --- !u!114 &3148222003680418879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +258,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreManagerName: XRScoreCanvas
   gridPlane: {fileID: 6873050026022274347}
+  emptyTileGameObjectPrefab: {fileID: 657154007244294001, guid: 108ba15fa6a1a3c4199d82da7846d0fe, type: 3}
+  countAddPlane: 0
 --- !u!65 &1075735101488796673
 BoxCollider:
   m_ObjectHideFlags: 0
