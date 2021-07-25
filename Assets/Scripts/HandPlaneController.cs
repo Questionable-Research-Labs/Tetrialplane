@@ -48,6 +48,7 @@ public class HandPlaneController : MonoBehaviour {
     }
 
     void ComputeSnapping() {
+        var removablePeices = new List<GameObject>();
         foreach (GameObject piece in enabledPieces) {
             if (piece == null) {
                 continue;
@@ -124,7 +125,7 @@ public class HandPlaneController : MonoBehaviour {
                         snappingPosition.Item3);
                     Debug.Log($"Added blocks minus {blocksMissed}");
                     if (blocksMissed.Count == 0) {
-                        Destroy(piece);
+                        removablePeices.Add(piece);
                     }
 
                     // Time to snap the blocks to the new positions
@@ -186,12 +187,12 @@ public class HandPlaneController : MonoBehaviour {
                     Debug.Log( x.ToString());
                 }
             }
-            
-
-
-
         }
-        
+
+        foreach (var piece in removablePeices) {
+            RemovePieceFromActive(piece);
+            Destroy(piece);
+        }
     } 
 
     private static GameObject GetRoot(GameObject gameObject) {

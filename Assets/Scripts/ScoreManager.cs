@@ -65,7 +65,8 @@ namespace Scripts {
         private void UpdateScore(int score) {
             _score += score;
             
-            scoreText.text = "" + _score;
+            if (scoreText != null)
+                scoreText.text = "" + _score;
         }
     }
 }
