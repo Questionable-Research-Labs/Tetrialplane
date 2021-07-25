@@ -237,6 +237,7 @@ MonoBehaviour:
   gridManager: {fileID: 48219011}
   planeHeight: 0.1
   snapDistThreshold: 0.6
+  removablePeices: []
 --- !u!114 &48219011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,6 +253,7 @@ MonoBehaviour:
   scoreManagerName: ScoreManager
   gridPlane: {fileID: 48219009}
   emptyTileGameObjectPrefab: {fileID: 657154007244294001, guid: 108ba15fa6a1a3c4199d82da7846d0fe, type: 3}
+  countAddPlane: 0
 --- !u!1 &1338805198
 GameObject:
   m_ObjectHideFlags: 0

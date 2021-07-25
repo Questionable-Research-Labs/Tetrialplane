@@ -18,25 +18,7 @@ public class HandPlaneController : MonoBehaviour {
     private void Start() {
         transform.localScale = new Vector3(0.1f * GridManager.PlaneWidth, planeHeight, 0.1f * GridManager.PlaneHeight);
     }
-
-
-    private void OnTriggerEnter(Collider other) {
-        var root = GetRoot(other.gameObject);
-        // root.transform.rotation = transform.rotation;
-        var rigidBody = root.GetComponentInChildren<Rigidbody>();
-        rigidBody.velocity = Vector3.zero;
-        Snap(root);
-    }
-
-
-    private void Snap(GameObject root) {
-        foreach (Transform child in root.transform) {
-            child.SetParent(transform);
-            var position = GetGridPosition(child.position);
-            child.position = position;
-        }
-    }
-
+    
     private Vector3 GetGridPosition(Vector3 position) {
         position -= transform.position;
         position.x = Mathf.Round(position.x / GridManager.PlaneWidth);
@@ -120,18 +102,24 @@ public class HandPlaneController : MonoBehaviour {
                 if (closeEnoughToSnap) {
 
                     var closeBlockLocalPos = closeBlock.Item1.localPosition;
-                    var objs = new List<GameObject>();
+                    var objs = new List<(Vector3Int,GameObject)>();
                     
                     foreach (Transform block in piece.transform) {
-                        block.localPosition -= closeBlockLocalPos;
-                        objs.Add(block.gameObject);
+                        var globalPosDelta = (block.position - closeBlock.Item1.position)*10;
+                        Vector3Int snappedPosDelta = new Vector3Int();
+                        snappedPosDelta.x = Mathf.RoundToInt(globalPosDelta.x);
+                        snappedPosDelta.y = Mathf.RoundToInt(globalPosDelta.y);
+                        snappedPosDelta.z = Mathf.RoundToInt(globalPosDelta.z);
+                        var localPosDelta = block.localPosition - closeBlockLocalPos;
+                        Debug.Log($"Global Pos Delta: {snappedPosDelta}, Local pos delta: {localPosDelta}");
+                        objs.Add((snappedPosDelta,block.gameObject));
                     }
                     
                     // the block snapped to
                     (int, int, int) snappingPosition = closeBlock.Item2;
 
                     Debug.Log($"Adding to grid");
-                    List<GameObject> blocksMissed = gridManager.AddBlocksToGrid(objs, snappingPosition.Item1, snappingPosition.Item2,
+                    List<(Vector3Int,GameObject)> blocksMissed = gridManager.AddBlocksToGrid(objs, snappingPosition.Item1, snappingPosition.Item2,
                         snappingPosition.Item3);
                     Debug.Log($"Added blocks minus {blocksMissed.Count}");
                     if (blocksMissed.Count == 0) {

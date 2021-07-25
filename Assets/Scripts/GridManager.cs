@@ -64,12 +64,12 @@ namespace Scripts {
          * <param name="y">The Y position, in terms of the grid, where the origin block collided</param>
          * <param name="z">The Z position, in terms of the grid, where the origin block collided</param>
          */
-        public List<GameObject> AddBlocksToGrid(IEnumerable<GameObject> blocks, int x, int y, int z) {
+        public List<(Vector3Int,GameObject)> AddBlocksToGrid(IEnumerable<(Vector3Int,GameObject)> blocks, int x, int y, int z) {
             // The number of blocks that did not land on the grid
             var blocksMissedCount = 0;
 
             // The missed blockes
-            var missedBlocks = new List<GameObject>();
+            var missedBlocks = new List<(Vector3Int,GameObject)>();
             
             // The blocks that landed in the grid
             var validBlocks = new List<(GameObject, (int, int, int))>();
@@ -78,16 +78,18 @@ namespace Scripts {
             var foundConnected = false;
 
             // Check to make sure all the blocks are valid
-            var blocksArray = blocks as GameObject[] ?? blocks.ToArray();
+            var blocksArray = blocks.ToArray();
             
             foreach (var block in blocksArray) {
                 // Get the local position
-                var localPosition = block.transform.localPosition;
+                var localPosition = block.Item1;
                 
                 // Calculate the block positions in the grid
-                int blockX = Mathf.FloorToInt(localPosition.x) + x;
-                int blockY = Mathf.FloorToInt(localPosition.y) + y;
-                int blockZ = Mathf.FloorToInt(localPosition.z) + z;
+                int blockX = localPosition.x + x;
+                int blockY = localPosition.y + y;
+                int blockZ = localPosition.z + z;
+                
+                Debug.DrawLine(ConvertFromGridIDToLocalSpace(blockX,blockY,blockZ),block.Item2.transform.position-ConvertFromGridIDToLocalSpace(blockX,blockY,blockZ),Color.red);
 
                 while (blockZ + 1 >= _grid.Count) {
                     Debug.Log("Adding Plane");
@@ -98,10 +100,10 @@ namespace Scripts {
                 switch (ValidBlockPosition(blockX, blockY, blockZ)) {
                     case BlockPositionValidity.Connected:
                         foundConnected = true;
-                        validBlocks.Add((block, (blockX, blockY, blockZ)));
+                        validBlocks.Add((block.Item2, (blockX, blockY, blockZ)));
                         break;
                     case BlockPositionValidity.Floating:
-                        validBlocks.Add((block, (blockX, blockY, blockZ)));
+                        validBlocks.Add((block.Item2, (blockX, blockY, blockZ)));
                         break;
                     case BlockPositionValidity.OutOfBounds:
                         missedBlocks.Add(block);
@@ -331,7 +333,7 @@ namespace Scripts {
                     for (int z = _grid.Count - 1; z >= 0; z--) {
                         if (_grid[z][y][x].transform.childCount > 0) {
                             Debug.Log($"Find grid piece for ({x},{y})");
-                            _peaks[y][x] = (z, _grid[z][y][x]);
+                            _peaks[y][x] = (z+1, _grid[z][y][x]);
                             break;
                         }
                     }
