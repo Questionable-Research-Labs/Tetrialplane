@@ -49,11 +49,12 @@ public class HandPlaneController : MonoBehaviour {
         ComputeSnapping();
         Debug.Log($"Checking if {removablePeices} has peices");
         foreach (var piece in removablePeices) {
-            Debug.Log($"Removing Peice {piece.name}");
-            RemovePieceFromActive(piece);
-            Destroy(piece);
-            Debug.Log("Removed peice");
-
+            if (piece != null) {
+                Debug.Log($"Removing Peice {piece.name}");
+                RemovePieceFromActive(piece);
+                Destroy(piece);
+                Debug.Log("Removed peice");
+            }
         }
     }
 
