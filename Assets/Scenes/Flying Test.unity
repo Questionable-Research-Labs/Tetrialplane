@@ -251,6 +251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreManagerName: ScoreManager
   gridPlane: {fileID: 48219009}
+  emptyTileGameObjectPrefab: {fileID: 657154007244294001, guid: 108ba15fa6a1a3c4199d82da7846d0fe, type: 3}
 --- !u!1 &1338805198
 GameObject:
   m_ObjectHideFlags: 0

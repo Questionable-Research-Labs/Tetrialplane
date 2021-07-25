@@ -188,7 +188,7 @@ public class HandPlaneController : MonoBehaviour {
                 }
             }
         }
-
+        
         foreach (var piece in removablePeices) {
             RemovePieceFromActive(piece);
             Destroy(piece);
