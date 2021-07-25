@@ -128,12 +128,9 @@ namespace Scripts {
 
                 // Parent the block
                 block.transform.SetParent(parentTransform);
-
-                // Set it's local position to 0
+                block.transform.localScale = new Vector3(0.1f,0.1f, 2f );
                 block.transform.localPosition = Vector3.zero;
-                
-                // Set the blocks rotation to 0
-                block.transform.rotation = Quaternion.identity;
+                block.transform.localRotation = Quaternion.identity;
             }
 
             // Deduct the points from the player
@@ -152,7 +149,8 @@ namespace Scripts {
             var tform = _grid[z][y][x].transform;
             block.transform.SetParent(tform);
             block.transform.localPosition = Vector3.zero;
-            block.transform.rotation = Quaternion.identity;
+            block.transform.localScale = Vector3.one;
+            block.transform.localRotation = Quaternion.identity;
         }
 
         /**
@@ -359,10 +357,12 @@ namespace Scripts {
 
                 for (var x = 0; x < PlaneWidth; x++) {
                     // var newObject = new GameObject($"X: {x}, Y: {y}, Z: {z}");
-                    GameObject newObject = Instantiate(emptyTileGameObjectPrefab, gridPlane, true);
+                    GameObject newObject = Instantiate(emptyTileGameObjectPrefab);
                     
                     // newObject.transform.SetPositionAndRotation(ConvertFromGridIDToLocalSpace(x,y,z),Quaternion.identity);
+                    newObject.transform.SetParent(gridPlane);
                     newObject.transform.localPosition = ConvertFromGridIDToLocalSpace(x, y, z);
+                    newObject.transform.localScale = Vector3.one;
                     newObject.name = $"X: {x}, Y: {y}, Z: {z}";
                     if (z > 0) {
                         Debug.Log("YESYESYSYEYSEYSEYD");
@@ -393,7 +393,11 @@ namespace Scripts {
         }
 
         private Vector3 ConvertFromGridIDToLocalSpace(int x, int y,int z) {
-            return new Vector3(x * _scalerFromGridToLocal.x-transform.localScale.x/2f,z*_scalerFromGridToLocal.z,y *_scalerFromGridToLocal.y-transform.localScale.z/2f);
+            return new Vector3(
+                z*_scalerFromGridToLocal.z,
+                y *_scalerFromGridToLocal.y-transform.localScale.z/2f,
+                x * _scalerFromGridToLocal.x-transform.localScale.x/2f
+                );
         }
 
         private void Start() {
