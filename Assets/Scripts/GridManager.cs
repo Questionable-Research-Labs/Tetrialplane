@@ -43,7 +43,7 @@ namespace Scripts {
          */
         private List<GameObject[][]> _grid = new List<GameObject[][]>();
 
-        private (int, GameObject)[][] _peaks;
+        private (int, GameObject)?[][] _peaks;
 
         private Vector3 _scalerFromGridToLocal;
 
@@ -83,6 +83,11 @@ namespace Scripts {
                 int blockY = Mathf.FloorToInt(localPosition.y) + y;
                 int blockZ = Mathf.FloorToInt(localPosition.z) + z;
 
+                while (blockZ + 1 >= _grid.Count) {
+                    Debug.Log("Adding Plane");
+                    AddPlane();
+                }
+
                 // Check whether the block is in a valid position
                 switch (ValidBlockPosition(blockX, blockY, blockZ)) {
                     case BlockPositionValidity.Connected:
@@ -96,6 +101,7 @@ namespace Scripts {
                         missedBlocks.Add(block);
                         break;
                     case BlockPositionValidity.SpaceTaken:
+                        Debug.Log("Did the overlap");
                         return blocksArray.ToList();
                 }
             }
@@ -108,14 +114,10 @@ namespace Scripts {
             // Loop through all the blocks being added to the grid
             foreach (var (block, (blockX, blockY, blockZ)) in validBlocks) {
                 // Add any necessary planes to account for new blocks 
-                if (blockZ >= _grid.Count) {
-                    for (var i = 0; i < blockZ - _grid.Count; i++) {
-                        AddPlane();
-                    }
-                }
+
                 
                 // Get the transform of the gameobject in the grid to use as transform parent
-                var parentTransform = _grid[blockZ-1][blockY][blockX].transform;
+                var parentTransform = _grid[blockZ][blockY][blockX].transform;
 
                 // Parent the block
                 block.transform.SetParent(parentTransform);
@@ -124,7 +126,6 @@ namespace Scripts {
                 block.transform.localPosition = Vector3.zero;
                 
                 // Set the blocks rotation to 0
-                block.transform.localRotation = Quaternion.identity;
             }
 
             // Deduct the points from the player
@@ -133,7 +134,7 @@ namespace Scripts {
             }
 
             // Update the grid
-            StartCoroutine(UpdateGrid());
+            UpdateGrid();
 
             // Return the missed blocks
             return missedBlocks;
@@ -168,10 +169,12 @@ namespace Scripts {
             }
             else {
                 for (var y = 0; y < _peaks.Length; y++) {
-                    var row = _peaks[y];
+                    (int, GameObject)?[] row = _peaks[y];
                     for (var x = 0; x < row.Length; x++) {
-                        var (z, tile) = row[x];
-                        peakPos.Add(((z, y, x), tile.transform.position));
+                        var (z, tile) = row[x] ?? (0, _grid[0][y][x]);
+                        Vector3 virtualLayerLocalPosition = tile.transform.localPosition + Vector3.down;
+                        Vector3 virtualLayerWorldPosition = gridPlane.TransformPoint(virtualLayerLocalPosition);
+                        peakPos.Add(((z, y, x), virtualLayerWorldPosition));
                     }
                 }    
             }
@@ -236,7 +239,7 @@ namespace Scripts {
          * </summary>
          * <returns></returns>
          */
-        private IEnumerator UpdateGrid() {
+        private void UpdateGrid() {
             // Create a temporary grid to store the updated grid
             var tempGrid = new List<GameObject[][]>();
 
@@ -283,8 +286,6 @@ namespace Scripts {
             _grid = tempGrid;
 
             RecalculatePeaks();
-
-            yield return null;
         }
 
         private void MoveTiles() {
@@ -316,7 +317,6 @@ namespace Scripts {
          * </summary>
          */
         private void RecalculatePeaks() {
-            MoveTiles();
             
             for (int y = 0; y < PlaneHeight; y++) {
                 for (int x = 0; x < PlaneWidth; x++) {
@@ -362,12 +362,12 @@ namespace Scripts {
         private void Awake() {
             scoreManager = GameObject.Find(scoreManagerName).GetComponent<ScoreManager>();
             
-            _peaks = new(int, GameObject)[PlaneHeight][];
+            _peaks = new(int, GameObject)?[PlaneHeight][];
             _scalerFromGridToLocal = new Vector3(transform.localScale.x / PlaneWidth,transform.localScale.z / PlaneHeight,0);
             _scalerFromGridToLocal.z = (_scalerFromGridToLocal.x + _scalerFromGridToLocal.y) / 2;
 
             for (var y = 0; y < PlaneHeight; y++) {
-                _peaks[y] = new (int, GameObject)[PlaneWidth];
+                _peaks[y] = new (int, GameObject)?[PlaneWidth];
             }
             
             RecalculatePeaks();

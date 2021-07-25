@@ -44,17 +44,20 @@ public class HandPlaneController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        StartCoroutine(ComputeSnapping());
+        ComputeSnapping();
     }
 
-    IEnumerator  ComputeSnapping() {
+    void ComputeSnapping() {
         foreach (GameObject piece in enabledPieces) {
-
-            List<((int, int, int),Vector3)> peaks = gridManager.GetPeaks();
-            foreach (var xPeak in peaks) {
+            if (piece == null) {
+                continue;
             }
+            
+            List<((int, int, int),Vector3)> peaks = gridManager.GetPeaks();
+            
             // (blockTransform,chosenCell,dist)
             List<(Transform, (int,int,int), float)> bestBlocksInPiece = new List<(Transform, (int,int,int), float)>();
+            
             foreach (Transform blockTransform in piece.transform) {
                 // Find distance from piece to every Peak
                 List<((int,int,int), float)> cellMagnitudes = new List<((int,int,int), float)>();
@@ -63,7 +66,6 @@ public class HandPlaneController : MonoBehaviour {
                     float dist = Vector3.Distance(piece.transform.position,cellWorldPos);
                     cellMagnitudes.Add(((cellX, cellY, cellZ),dist));  
                     Debug.DrawRay(piece.transform.position, cellWorldPos-piece.transform.position, Color.green);
-                    Debug.Log($"Piece: {new Vector3(cellX, cellY, cellZ)}, cell: {cellWorldPos}");
                 }
                 // Order Cell peaks tops by distance magnitude
                 cellMagnitudes.Sort((x, y) => x.Item2.CompareTo(y.Item2));
@@ -74,7 +76,7 @@ public class HandPlaneController : MonoBehaviour {
             }
 
             if (bestBlocksInPiece.Count == 0) {
-                yield break;
+                return;
             }
             
             // Sort for the best
@@ -105,7 +107,6 @@ public class HandPlaneController : MonoBehaviour {
                 }
 
                 if (closeEnoughToSnap) {
-                    Debug.Log("SUCESSSSSSUS");
 
                     var closeBlockLocalPos = closeBlock.Item1.localPosition;
                     var objs = new List<GameObject>();
@@ -117,11 +118,11 @@ public class HandPlaneController : MonoBehaviour {
                     
                     // the block snapped to
                     (int, int, int) snappingPosition = closeBlock.Item2;
-                    // adjust so it is above the snapped block
-                    snappingPosition.Item3++;
 
+                    Debug.Log($"Adding to grid");
                     List<GameObject> blocksMissed = gridManager.AddBlocksToGrid(objs, snappingPosition.Item1, snappingPosition.Item2,
                         snappingPosition.Item3);
+                    Debug.Log($"Added blocks minus {blocksMissed}");
                     if (blocksMissed.Count == 0) {
                         Destroy(piece);
                     }
@@ -177,7 +178,6 @@ public class HandPlaneController : MonoBehaviour {
                 }
 
                 // Workout angle between close block and far block
-                Debug.Log($"Rotation of piece {rotationOfPiece}, Close {closeBlock}");
                 
             }
             else {
@@ -192,7 +192,6 @@ public class HandPlaneController : MonoBehaviour {
 
         }
         
-        yield break;
     } 
 
     private static GameObject GetRoot(GameObject gameObject) {
