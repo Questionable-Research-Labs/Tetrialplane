@@ -79,7 +79,7 @@ public class FlyingController : MonoBehaviour {
 
         var newObject = Instantiate(originalObject, position, Quaternion.identity);
         newObject.transform.localScale = pieceScale;
-        newObject.transform.LookAt(new Vector3(0f,Random.Range(-4f, 4f),0f));
+        newObject.transform.LookAt(new Vector3(0f,Random.Range(-2f, 2f),0f));
         var rigidBody = newObject.GetComponent<Rigidbody>();
         rigidBody.velocity = newObject.transform.forward * Random.Range(1f,4f);
 
