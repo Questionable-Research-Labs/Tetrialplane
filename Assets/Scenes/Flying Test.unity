@@ -152,11 +152,11 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48219005}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!23 &48219007
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -215,11 +215,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48219005}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1750349152}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &48219010
 MonoBehaviour:
@@ -236,7 +236,7 @@ MonoBehaviour:
   transform: {fileID: 48219009}
   gridManager: {fileID: 48219011}
   planeHeight: 0.1
-  snapDistThreshold: 0.6
+  scoreManager: {fileID: 1338805199}
 --- !u!114 &48219011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,6 +252,7 @@ MonoBehaviour:
   scoreManagerName: ScoreManager
   gridPlane: {fileID: 48219009}
   emptyTileGameObjectPrefab: {fileID: 657154007244294001, guid: 108ba15fa6a1a3c4199d82da7846d0fe, type: 3}
+  countAddPlane: 0
 --- !u!1 &1338805198
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,6 +287,7 @@ MonoBehaviour:
   planeClearScoreAddition: 300
   planeClearScoreMultiplier: 1.5
   tetrisPlaneClearScoreAddition: 2000
+  scoreIncrement: 50
 --- !u!4 &1338805200
 Transform:
   m_ObjectHideFlags: 0
@@ -298,76 +300,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1750349151
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1750349152}
-  - component: {fileID: 1750349154}
-  - component: {fileID: 1750349153}
-  - component: {fileID: 1750349155}
-  m_Layer: 0
-  m_Name: TetrisGrid
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1750349152
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750349151}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 48219009}
-  m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &1750349153
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750349151}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!65 &1750349154
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750349151}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.2, z: 1}
-  m_Center: {x: 0, y: 0.05, z: 0}
---- !u!114 &1750349155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1750349151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8444158abb2efe459bcdffe6ee6b06d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sappingController: {fileID: 48219010}
 --- !u!1 &1849376585
 GameObject:
   m_ObjectHideFlags: 0
@@ -867,7 +801,7 @@ MonoBehaviour:
   - {fileID: 4250530310317924193, guid: 937612d9323273f44a01335fc8c4d65d, type: 3}
   - {fileID: 6942592413744802844, guid: b41978224b7c9a045bb81174c045fcff, type: 3}
   gameArea: {fileID: 1965529760}
-  minVelocity: {x: -5, y: -5, z: -5}
+  minVelocity: {x: 0, y: -5, z: 0}
   maxVelocity: {x: 5, y: 5, z: 5}
   pieceScale: {x: 0.1, y: 0.1, z: 0.1}
 --- !u!4 &1965529759

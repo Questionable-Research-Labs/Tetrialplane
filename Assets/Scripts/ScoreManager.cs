@@ -34,6 +34,7 @@ namespace Scripts {
         public int tetrisPlaneClearScoreAddition = 2000;
 
         private int _score = 0;
+        public int scoreIncrement = 50;
 
         /**
          * <summary>
@@ -64,7 +65,15 @@ namespace Scripts {
                     break;
             }
         }
-        
+
+        public void IncreaseScore() {
+            _score += scoreIncrement;
+            Debug.Log(_score);
+        }
+
+        public void ResetScore() {
+            _score = 0;
+        }
 
         /**
          * <summary>
